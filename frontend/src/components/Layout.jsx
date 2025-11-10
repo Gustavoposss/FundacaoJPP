@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import classNames from 'classnames';
 
 export const Layout = ({ requiresAuth = true }) => {
   const [collapsed, setCollapsed] = useState(false);

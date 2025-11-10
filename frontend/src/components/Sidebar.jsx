@@ -1,7 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { HouseDoor, People, CalendarEvent, GraphUp } from 'react-bootstrap-icons';
-import classNames from 'classnames';
 
 const menuItems = [
   { to: '/dashboard', label: 'Dashboard', icon: HouseDoor },
