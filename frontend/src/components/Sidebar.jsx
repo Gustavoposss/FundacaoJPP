@@ -41,32 +41,23 @@ export const Sidebar = ({ collapsed = false }) => {
         style={{ 
           display: 'flex', 
           alignItems: 'center', 
-          gap: '12px', 
+          justifyContent: collapsed ? 'center' : 'flex-start',
           padding: '24px',
-          justifyContent: collapsed ? 'center' : 'flex-start'
+          borderBottom: '1px solid #e5e7eb',
+          minHeight: '80px'
         }}
       >
-        <div 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            width: '40px', 
-            height: '40px', 
-            borderRadius: '8px', 
-            backgroundColor: 'rgba(0, 168, 89, 0.1)', 
-            border: '1px solid rgba(0, 168, 89, 0.2)', 
-            color: '#00a859'
+        <img 
+          src="/Logotipo Fundação José Possidônio Peixoto.png" 
+          alt="Fundação José Possidônio Peixoto"
+          style={{
+            width: collapsed ? '40px' : '180px',
+            height: collapsed ? '40px' : 'auto',
+            maxHeight: collapsed ? '40px' : '60px',
+            objectFit: 'contain',
+            transition: 'width 0.3s ease, height 0.3s ease'
           }}
-        >
-          <HouseDoor size={20} />
-        </div>
-        {!collapsed && (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontSize: '16px', fontWeight: 600, color: '#1f2937' }}>Fundação J.P.P.</span>
-            <small style={{ fontSize: '12px', color: '#6b7280' }}>Painel Admin</small>
-          </div>
-        )}
+        />
       </div>
 
       {/* Navigation */}
