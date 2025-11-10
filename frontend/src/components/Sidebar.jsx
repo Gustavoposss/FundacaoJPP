@@ -48,7 +48,7 @@ export const Sidebar = ({ collapsed = false }) => {
         }}
       >
         <img 
-          src="/logo-fundacao-jpp.png"
+          src="/logo-fundacao-jpp.svg"
           alt="Fundação José Possidônio Peixoto"
           style={{
             width: collapsed ? '40px' : '180px',

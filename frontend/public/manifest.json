@@ -3,12 +3,12 @@
   "name": "Sistema de Presenca - Fundacao Jose Possidonio Peixoto",
   "icons": [
     {
-      "src": "logo-fundacao-jpp.png",
+      "src": "logo-fundacao-jpp.svg",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo-fundacao-jpp.png",
+      "src": "logo-fundacao-jpp.svg",
       "type": "image/png",
       "sizes": "512x512"
     }
