@@ -48,7 +48,7 @@ export const Sidebar = ({ collapsed = false }) => {
         }}
       >
         <img 
-          src="/logo-fundacao-jpp.png" 
+          src="/logo-fundacao-jpp.png"
           alt="Fundação José Possidônio Peixoto"
           style={{
             width: collapsed ? '40px' : '180px',
@@ -56,6 +56,10 @@ export const Sidebar = ({ collapsed = false }) => {
             maxHeight: collapsed ? '40px' : '60px',
             objectFit: 'contain',
             transition: 'width 0.3s ease, height 0.3s ease'
+          }}
+          onError={(e) => {
+            console.error('Erro ao carregar logo:', e.target.src);
+            e.target.style.display = 'none';
           }}
         />
       </div>
