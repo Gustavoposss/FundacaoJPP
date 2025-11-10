@@ -4,12 +4,12 @@
   "icons": [
     {
       "src": "logo-fundacao-jpp.svg",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "sizes": "192x192"
     },
     {
       "src": "logo-fundacao-jpp.svg",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "sizes": "512x512"
     }
   ],

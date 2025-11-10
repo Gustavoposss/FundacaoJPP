@@ -16,6 +16,12 @@
       }
     },
     {
+      "src": "/(.*\\.svg)",
+      "headers": {
+        "content-type": "image/svg+xml"
+      }
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
