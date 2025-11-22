@@ -12,13 +12,37 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('fjpp_token') || '');
   const [loading, setLoading] = useState(false);
 
+  // Carregar token do localStorage ao montar o componente
   useEffect(() => {
-    if (!token) {
+    const storedToken = localStorage.getItem('fjpp_token');
+    const storedUsuario = localStorage.getItem('fjpp_usuario');
+    
+    if (storedToken && storedUsuario) {
+      try {
+        const parsedUsuario = JSON.parse(storedUsuario);
+        setToken(storedToken);
+        setUsuario(parsedUsuario);
+        api.defaults.headers.common.Authorization = `Bearer ${storedToken}`;
+      } catch (e) {
+        console.error('Erro ao parsear usuário do localStorage:', e);
+        localStorage.removeItem('fjpp_token');
+        localStorage.removeItem('fjpp_usuario');
+        setUsuario(null);
+        setToken('');
+      }
+    } else if (!storedToken) {
       setUsuario(null);
-      return;
+      setToken('');
     }
-
-    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }, []); // Executar apenas uma vez ao montar
+  
+  // Atualizar header quando token mudar
+  useEffect(() => {
+    if (token) {
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    } else {
+      delete api.defaults.headers.common.Authorization;
+    }
   }, [token]);
 
   const login = async (email, senha) => {
