@@ -134,6 +134,21 @@ export const buscarEventos = async ({ inicio, fim, nome, local, ordenar = 'data_
  * Busca idosos com filtros avançados
  */
 export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, idade_max, status, ordenar = 'nome_asc' }) => {
+  // Verificar se a coluna status existe
+  let hasStatusColumn = false;
+  try {
+    const checkQuery = `
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'idosos' AND column_name = 'status'
+    `;
+    const { rows } = await db.query(checkQuery);
+    hasStatusColumn = rows.length > 0;
+  } catch (error) {
+    console.error('Erro ao verificar coluna status:', error);
+    hasStatusColumn = false;
+  }
+
   let query = `
     SELECT 
       i.id,
@@ -144,7 +159,7 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
       i.cpf,
       i.rg,
       i.data_cadastro,
-      i.status,
+      ${hasStatusColumn ? 'i.status,' : "'fixo' as status,"}
       COUNT(DISTINCT p.id_evento) FILTER (WHERE p.presente = true) AS total_presencas
     FROM idosos i
     LEFT JOIN presencas p ON p.id_idoso = i.id
@@ -195,7 +210,7 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
     paramIndex++;
   }
 
-  if (status) {
+  if (status && hasStatusColumn) {
     query += ` AND i.status = $${paramIndex}`;
     params.push(status);
     paramIndex++;
