@@ -6,6 +6,21 @@ export const api = axios.create({
   baseURL: BASE_URL,
 });
 
+// Interceptor de requisição: sempre adicionar token do localStorage
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('fjpp_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Interceptor de resposta: tratar erros 401
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -16,7 +31,7 @@ api.interceptors.response.use(
       if (token) {
         // Verificar se o erro é realmente de token inválido
         const errorMessage = error.response?.data?.message || '';
-        if (errorMessage.includes('Token inválido') || errorMessage.includes('expirado')) {
+        if (errorMessage.includes('Token inválido') || errorMessage.includes('expirado') || errorMessage.includes('Token não fornecido')) {
           localStorage.removeItem('fjpp_token');
           localStorage.removeItem('fjpp_usuario');
           // Redirecionar apenas se estiver em uma rota protegida
