@@ -4,6 +4,7 @@ const fields = [
   { name: 'nome_completo', label: 'Nome completo', type: 'text', required: true, cols: 6 },
   { name: 'idade', label: 'Idade', type: 'number', required: true, cols: 6 },
   { name: 'sexo', label: 'Sexo', type: 'select', options: ['Masculino', 'Feminino', 'Outro'], cols: 6 },
+  { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'espera'], optionLabels: { 'fixo': 'Fixo', 'espera': 'Espera' }, cols: 6 },
   { name: 'telefone', label: 'Telefone', type: 'text', cols: 6 },
   { name: 'cpf', label: 'CPF', type: 'text', required: true, cols: 6 },
   { name: 'rg', label: 'RG', type: 'text', cols: 6 },
@@ -32,7 +33,7 @@ export const IdosoForm = ({ values, onChange, onSubmit, loading }) => (
               <option value="">Selecione</option>
               {field.options.map((option) => (
                 <option key={option} value={option}>
-                  {option}
+                  {field.optionLabels && field.optionLabels[option] ? field.optionLabels[option] : option}
                 </option>
               ))}
             </select>

@@ -13,6 +13,7 @@ export const Idosos = () => {
   const navigate = useNavigate();
   const [idosos, setIdosos] = useState([]);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const debouncedSearch = useDebounce(search, 500); // Aguardar 500ms após parar de digitar
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -22,7 +23,11 @@ export const Idosos = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const { data } = await api.get('/idosos', { params: { search: debouncedSearch } });
+        const params = { search: debouncedSearch };
+        if (statusFilter) {
+          params.status = statusFilter;
+        }
+        const { data } = await api.get('/idosos', { params });
         setIdosos(data.data?.idosos || []);
       } catch (error) {
         toast.error('Não foi possível carregar a lista de idosos.');
@@ -32,7 +37,7 @@ export const Idosos = () => {
     };
 
     fetchData();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, statusFilter]);
 
   // Remover filtro local, pois a busca já é feita no backend
   const filtered = idosos;
@@ -74,14 +79,23 @@ export const Idosos = () => {
         }
       />
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="mb-4">
+        <div className="mb-4 flex gap-3">
           <input
             type="text"
             placeholder="Buscar por nome ou CPF"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
           />
+          <select
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+          >
+            <option value="">Todos os status</option>
+            <option value="fixo">Fixo</option>
+            <option value="espera">Espera</option>
+          </select>
         </div>
 
         <div className="overflow-x-auto">
@@ -91,6 +105,7 @@ export const Idosos = () => {
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Idade</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Sexo</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Telefone</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">CPF</th>
                 <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Ações</th>
@@ -99,7 +114,7 @@ export const Idosos = () => {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                     Nenhum idoso encontrado.
                   </td>
                 </tr>
@@ -109,6 +124,17 @@ export const Idosos = () => {
                     <td className="px-4 py-3 text-sm text-gray-900">{idoso.nome_completo}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.idade}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.sexo}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          idoso.status === 'fixo'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}
+                      >
+                        {idoso.status === 'fixo' ? 'Fixo' : 'Espera'}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.telefone || '-'}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.cpf ? cleanCPF(idoso.cpf) : '-'}</td>
                     <td className="px-4 py-3 text-right">

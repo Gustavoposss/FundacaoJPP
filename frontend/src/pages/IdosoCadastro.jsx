@@ -11,6 +11,7 @@ const initialValues = {
   nome_completo: '',
   idade: '',
   sexo: '',
+  status: 'fixo',
   endereco: '',
   rg: '',
   cpf: '',

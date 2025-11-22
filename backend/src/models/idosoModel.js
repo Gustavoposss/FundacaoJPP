@@ -1,15 +1,25 @@
 import db from '../services/db.js';
 
-export const listarIdosos = async ({ search }) => {
+export const listarIdosos = async ({ search, status }) => {
   let query = `
-    SELECT id, nome_completo, idade, sexo, telefone, cpf, data_cadastro
+    SELECT id, nome_completo, idade, sexo, telefone, cpf, data_cadastro, status
     FROM idosos
   `;
   const params = [];
+  const conditions = [];
 
   if (search) {
-    query += ` WHERE LOWER(nome_completo) LIKE $1 OR cpf LIKE $1`;
+    conditions.push(`(LOWER(nome_completo) LIKE $${params.length + 1} OR cpf LIKE $${params.length + 1})`);
     params.push(`%${search.toLowerCase()}%`);
+  }
+
+  if (status) {
+    conditions.push(`status = $${params.length + 1}`);
+    params.push(status);
+  }
+
+  if (conditions.length > 0) {
+    query += ` WHERE ${conditions.join(' AND ')}`;
   }
 
   query += ' ORDER BY nome_completo ASC';
@@ -20,7 +30,7 @@ export const listarIdosos = async ({ search }) => {
 
 export const buscarIdosoPorId = async (id) => {
   const query = `
-    SELECT id, nome_completo, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone, data_cadastro
+    SELECT id, nome_completo, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone, data_cadastro, status
     FROM idosos
     WHERE id = $1
   `;
@@ -38,11 +48,12 @@ export const criarIdoso = async (dados) => {
     cpf,
     titulo_eleitoral,
     telefone,
+    status = 'fixo',
   } = dados;
 
   const query = `
-    INSERT INTO idosos (nome_completo, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    INSERT INTO idosos (nome_completo, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone, status)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     RETURNING *
   `;
 
@@ -55,6 +66,7 @@ export const criarIdoso = async (dados) => {
     cpf,
     titulo_eleitoral,
     telefone,
+    status,
   ]);
 
   return rows[0];
@@ -70,6 +82,7 @@ export const atualizarIdoso = async (id, dados) => {
     cpf,
     titulo_eleitoral,
     telefone,
+    status,
   } = dados;
 
   const query = `
@@ -81,8 +94,9 @@ export const atualizarIdoso = async (id, dados) => {
         rg = $5,
         cpf = $6,
         titulo_eleitoral = $7,
-        telefone = $8
-    WHERE id = $9
+        telefone = $8,
+        status = $9
+    WHERE id = $10
     RETURNING *
   `;
 
@@ -95,6 +109,7 @@ export const atualizarIdoso = async (id, dados) => {
     cpf,
     titulo_eleitoral,
     telefone,
+    status || 'fixo',
     id,
   ]);
 

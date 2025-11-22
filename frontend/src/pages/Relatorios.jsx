@@ -330,6 +330,18 @@ export const Relatorios = () => {
                     </select>
                   </div>
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+                      value={filtros.status || ''}
+                      onChange={(e) => handleFiltroChange('status', e.target.value)}
+                    >
+                      <option value="">Todos</option>
+                      <option value="fixo">Fixo</option>
+                      <option value="espera">Espera</option>
+                    </select>
+                  </div>
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Idade mínima</label>
                     <input
                       type="number"

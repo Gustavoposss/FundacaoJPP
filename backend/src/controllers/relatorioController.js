@@ -74,16 +74,18 @@ export const gerarRelatorio = async (req, res) => {
           sexo: filtros.sexo,
           idade_min: filtros.idade_min,
           idade_max: filtros.idade_max,
+          status: filtros.status,
           ordenar: filtros.ordenar,
         });
         registros = registros.map((r) => ({
           id: r.id,
           titulo: r.nome_completo,
-          descricao: `Idade: ${r.idade} anos | Sexo: ${r.sexo} | Telefone: ${r.telefone || 'N/A'}`,
+          descricao: `Idade: ${r.idade} anos | Sexo: ${r.sexo} | Status: ${r.status === 'fixo' ? 'Fixo' : 'Espera'} | Telefone: ${r.telefone || 'N/A'}`,
           data: r.data_cadastro,
           nome: r.nome_completo,
           idade: r.idade,
           sexo: r.sexo,
+          status: r.status,
           telefone: r.telefone,
           cpf: r.cpf,
           rg: r.rg,
@@ -166,13 +168,15 @@ export const exportarRelatorio = async (req, res) => {
           sexo: filtros.sexo,
           idade_min: filtros.idade_min,
           idade_max: filtros.idade_max,
+          status: filtros.status,
           ordenar: filtros.ordenar,
         });
-        headers = ['Nome', 'Idade', 'Sexo', 'CPF', 'Telefone', 'Total Presenças'];
+        headers = ['Nome', 'Idade', 'Sexo', 'Status', 'CPF', 'Telefone', 'Total Presenças'];
         rows = registros.map((r) => [
           r.nome_completo,
           r.idade,
           r.sexo,
+          r.status === 'fixo' ? 'Fixo' : 'Espera',
           cleanCPF(r.cpf),
           r.telefone || 'N/A',
           Number(r.total_presencas) || 0,

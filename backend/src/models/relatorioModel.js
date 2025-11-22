@@ -133,7 +133,7 @@ export const buscarEventos = async ({ inicio, fim, nome, local, ordenar = 'data_
 /**
  * Busca idosos com filtros avançados
  */
-export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, idade_max, ordenar = 'nome_asc' }) => {
+export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, idade_max, status, ordenar = 'nome_asc' }) => {
   let query = `
     SELECT 
       i.id,
@@ -144,6 +144,7 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
       i.cpf,
       i.rg,
       i.data_cadastro,
+      i.status,
       COUNT(DISTINCT p.id_evento) FILTER (WHERE p.presente = true) AS total_presencas
     FROM idosos i
     LEFT JOIN presencas p ON p.id_idoso = i.id
@@ -191,6 +192,12 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
   if (idade_max) {
     query += ` AND i.idade <= $${paramIndex}`;
     params.push(Number(idade_max));
+    paramIndex++;
+  }
+
+  if (status) {
+    query += ` AND i.status = $${paramIndex}`;
+    params.push(status);
     paramIndex++;
   }
 

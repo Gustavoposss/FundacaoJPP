@@ -52,6 +52,11 @@ export const validateIdoso = (req, res, next) => {
     return errorResponse(res, 'Telefone inválido', 400);
   }
 
+  // Validar status (se fornecido)
+  if (req.body.status && !['fixo', 'espera'].includes(req.body.status)) {
+    return errorResponse(res, 'Status inválido (deve ser "fixo" ou "espera")', 400);
+  }
+
   next();
 };
 
