@@ -60,7 +60,7 @@ export const buscarIdosoPorId = async (id) => {
   }
 
   const query = `
-    SELECT id, nome_completo, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone, data_cadastro${hasStatusColumn ? ', status' : ", 'fixo' as status"}
+    SELECT id, nome_completo, data_nascimento, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone, data_cadastro${hasStatusColumn ? ', status' : ", 'fixo' as status"}
     FROM idosos
     WHERE id = $1
   `;
@@ -86,6 +86,7 @@ export const criarIdoso = async (dados) => {
 
   const {
     nome_completo,
+    data_nascimento,
     idade,
     sexo,
     endereco,
@@ -98,13 +99,14 @@ export const criarIdoso = async (dados) => {
 
   if (hasStatusColumn) {
     const query = `
-      INSERT INTO idosos (nome_completo, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone, status)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      INSERT INTO idosos (nome_completo, data_nascimento, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone, status)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING *
     `;
 
     const { rows } = await db.query(query, [
       nome_completo,
+      data_nascimento || null,
       idade,
       sexo,
       endereco,
@@ -119,13 +121,14 @@ export const criarIdoso = async (dados) => {
   } else {
     // Se a coluna não existe, inserir sem status
     const query = `
-      INSERT INTO idosos (nome_completo, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO idosos (nome_completo, data_nascimento, idade, sexo, endereco, rg, cpf, titulo_eleitoral, telefone)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING *
     `;
 
     const { rows } = await db.query(query, [
       nome_completo,
+      data_nascimento || null,
       idade,
       sexo,
       endereco,
@@ -158,6 +161,7 @@ export const atualizarIdoso = async (id, dados) => {
 
   const {
     nome_completo,
+    data_nascimento,
     idade,
     sexo,
     endereco,
@@ -172,20 +176,22 @@ export const atualizarIdoso = async (id, dados) => {
     const query = `
       UPDATE idosos
       SET nome_completo = $1,
-          idade = $2,
-          sexo = $3,
-          endereco = $4,
-          rg = $5,
-          cpf = $6,
-          titulo_eleitoral = $7,
-          telefone = $8,
-          status = $9
-      WHERE id = $10
+          data_nascimento = $2,
+          idade = $3,
+          sexo = $4,
+          endereco = $5,
+          rg = $6,
+          cpf = $7,
+          titulo_eleitoral = $8,
+          telefone = $9,
+          status = $10
+      WHERE id = $11
       RETURNING *
     `;
 
     const { rows } = await db.query(query, [
       nome_completo,
+      data_nascimento || null,
       idade,
       sexo,
       endereco,
@@ -203,19 +209,21 @@ export const atualizarIdoso = async (id, dados) => {
     const query = `
       UPDATE idosos
       SET nome_completo = $1,
-          idade = $2,
-          sexo = $3,
-          endereco = $4,
-          rg = $5,
-          cpf = $6,
-          titulo_eleitoral = $7,
-          telefone = $8
-      WHERE id = $9
+          data_nascimento = $2,
+          idade = $3,
+          sexo = $4,
+          endereco = $5,
+          rg = $6,
+          cpf = $7,
+          titulo_eleitoral = $8,
+          telefone = $9
+      WHERE id = $10
       RETURNING *
     `;
 
     const { rows } = await db.query(query, [
       nome_completo,
+      data_nascimento || null,
       idade,
       sexo,
       endereco,

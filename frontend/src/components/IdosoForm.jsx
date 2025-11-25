@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 const fields = [
   { name: 'nome_completo', label: 'Nome completo', type: 'text', required: true, cols: 6 },
+  { name: 'data_nascimento', label: 'Data de Nascimento', type: 'date', cols: 6 },
   { name: 'idade', label: 'Idade', type: 'number', required: true, cols: 6 },
   { name: 'sexo', label: 'Sexo', type: 'select', options: ['Masculino', 'Feminino', 'Outro'], cols: 6 },
   { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'espera'], optionLabels: { 'fixo': 'Fixo', 'espera': 'Espera' }, cols: 6 },
