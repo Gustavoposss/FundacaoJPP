@@ -90,14 +90,25 @@ export const IdosoDetalhes = () => {
   }
 
   const personalInfo = [
-    { label: 'Nome completo', value: idoso.nome_completo },
-    { label: 'Idade', value: `${idoso.idade} anos` },
+    { label: 'Nome Completo', value: idoso.nome_completo },
+    { label: 'Data de Nascimento', value: idoso.data_nascimento ? new Date(idoso.data_nascimento).toLocaleDateString('pt-BR') : '-' },
     { label: 'Sexo', value: idoso.sexo },
+    { label: 'Naturalidade', value: idoso.naturalidade },
     { label: 'Telefone', value: idoso.telefone },
+    { label: 'Status', value: idoso.status === 'fixo' ? 'Fixo' : 'Espera' },
+    { label: 'Endereço', value: idoso.endereco },
+    { label: 'Nº', value: idoso.numero },
+    { label: 'Bairro', value: idoso.bairro },
+    { label: 'Cidade', value: idoso.cidade },
+    { label: 'CEP', value: idoso.cep },
     { label: 'CPF', value: idoso.cpf ? cleanCPF(idoso.cpf) : '-' },
     { label: 'RG', value: idoso.rg },
+    { label: 'Órgão Expedidor', value: idoso.orgao_expedidor },
     { label: 'Título Eleitoral', value: idoso.titulo_eleitoral },
-    { label: 'Endereço', value: idoso.endereco },
+    { label: 'Zona', value: idoso.zona_eleitoral },
+    { label: 'Seção', value: idoso.secao_eleitoral },
+    { label: 'Município/UF', value: idoso.municipio_uf },
+    { label: 'Data de Inscrição', value: idoso.data_inscricao ? new Date(idoso.data_inscricao).toLocaleDateString('pt-BR') : '-' },
   ];
 
   return (
