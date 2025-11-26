@@ -91,7 +91,7 @@ export const IdosoDetalhes = () => {
 
   const personalInfo = [
     { label: 'Nome Completo', value: idoso.nome_completo },
-    { label: 'Data de Nascimento', value: idoso.data_nascimento ? new Date(idoso.data_nascimento).toLocaleDateString('pt-BR') : '-' },
+    { label: 'Data de Nascimento', value: idoso.data_nascimento ? idoso.data_nascimento.split('T')[0].split('-').reverse().join('/') : '-' },
     { label: 'Sexo', value: idoso.sexo },
     { label: 'Naturalidade', value: idoso.naturalidade },
     { label: 'Telefone', value: idoso.telefone },
@@ -108,7 +108,7 @@ export const IdosoDetalhes = () => {
     { label: 'Zona', value: idoso.zona_eleitoral },
     { label: 'Seção', value: idoso.secao_eleitoral },
     { label: 'Município/UF', value: idoso.municipio_uf },
-    { label: 'Data de Inscrição', value: idoso.data_inscricao ? new Date(idoso.data_inscricao).toLocaleDateString('pt-BR') : '-' },
+    { label: 'Data de Inscrição', value: idoso.data_inscricao ? idoso.data_inscricao.split('T')[0].split('-').reverse().join('/') : '-' },
   ];
 
   return (
