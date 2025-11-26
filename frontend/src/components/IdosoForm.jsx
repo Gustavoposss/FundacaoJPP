@@ -3,30 +3,30 @@ import PropTypes from 'prop-types';
 const fields = [
   // Dados Pessoais
   { name: 'nome_completo', label: 'Nome Completo', type: 'text', required: true, cols: 6 },
-  { name: 'data_nascimento', label: 'Data de Nascimento', type: 'date', cols: 6 },
-  { name: 'sexo', label: 'Sexo', type: 'select', options: ['Masculino', 'Feminino', 'Outro'], cols: 3 },
-  { name: 'naturalidade', label: 'Naturalidade', type: 'text', cols: 3 },
-  { name: 'telefone', label: 'Telefone', type: 'text', cols: 3 },
-  { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'espera'], optionLabels: { 'fixo': 'Fixo', 'espera': 'Espera' }, cols: 3 },
+  { name: 'data_nascimento', label: 'Data de Nascimento', type: 'date', required: true, cols: 6 },
+  { name: 'sexo', label: 'Sexo', type: 'select', options: ['Masculino', 'Feminino', 'Outro'], required: true, cols: 3 },
+  { name: 'naturalidade', label: 'Naturalidade', type: 'text', required: true, cols: 3 },
+  { name: 'telefone', label: 'Telefone', type: 'text', required: true, cols: 3 },
+  { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'espera'], optionLabels: { 'fixo': 'Fixo', 'espera': 'Espera' }, required: true, cols: 3 },
   
   // Endereço
-  { name: 'endereco', label: 'Endereço', type: 'text', cols: 6 },
-  { name: 'numero', label: 'Nº', type: 'text', cols: 2 },
-  { name: 'bairro', label: 'Bairro', type: 'text', cols: 4 },
-  { name: 'cidade', label: 'Cidade', type: 'text', cols: 4 },
-  { name: 'cep', label: 'CEP', type: 'text', cols: 2 },
+  { name: 'endereco', label: 'Endereço', type: 'text', required: true, cols: 6 },
+  { name: 'numero', label: 'Nº', type: 'text', required: true, cols: 2 },
+  { name: 'bairro', label: 'Bairro', type: 'text', required: true, cols: 4 },
+  { name: 'cidade', label: 'Cidade', type: 'text', required: true, cols: 4 },
+  { name: 'cep', label: 'CEP', type: 'text', required: true, cols: 2 },
   
   // Documentos
   { name: 'cpf', label: 'CPF', type: 'text', required: true, cols: 3 },
-  { name: 'rg', label: 'RG', type: 'text', cols: 3 },
-  { name: 'orgao_expedidor', label: 'Órgão Expedidor', type: 'text', cols: 3 },
-  { name: 'titulo_eleitoral', label: 'Título Eleitoral', type: 'text', cols: 3 },
-  { name: 'zona_eleitoral', label: 'Zona', type: 'text', cols: 2 },
-  { name: 'secao_eleitoral', label: 'Seção', type: 'text', cols: 2 },
-  { name: 'municipio_uf', label: 'Município/UF', type: 'text', cols: 4 },
+  { name: 'rg', label: 'RG', type: 'text', required: true, cols: 3 },
+  { name: 'orgao_expedidor', label: 'Órgão Expedidor', type: 'text', required: true, cols: 3 },
+  { name: 'titulo_eleitoral', label: 'Título Eleitoral', type: 'text', required: true, cols: 3 },
+  { name: 'zona_eleitoral', label: 'Zona', type: 'text', required: true, cols: 2 },
+  { name: 'secao_eleitoral', label: 'Seção', type: 'text', required: true, cols: 2 },
+  { name: 'municipio_uf', label: 'Município/UF', type: 'text', required: true, cols: 4 },
   
   // Inscrição
-  { name: 'data_inscricao', label: 'Data de Inscrição no Projeto', type: 'date', cols: 4 },
+  { name: 'data_inscricao', label: 'Data de Inscrição no Projeto', type: 'date', required: true, cols: 4 },
 ];
 
 const getColClass = (cols) => {

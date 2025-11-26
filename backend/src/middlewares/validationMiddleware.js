@@ -12,7 +12,12 @@ import {
  * Middleware para validar dados de idoso
  */
 export const validateIdoso = (req, res, next) => {
-  const requiredFields = ['nome_completo', 'idade', 'sexo', 'cpf'];
+  const requiredFields = [
+    'nome_completo', 'data_nascimento', 'sexo', 'naturalidade', 'telefone', 'status',
+    'endereco', 'numero', 'bairro', 'cidade', 'cep',
+    'cpf', 'rg', 'orgao_expedidor', 'titulo_eleitoral', 'zona_eleitoral', 'secao_eleitoral', 'municipio_uf',
+    'data_inscricao'
+  ];
   const missing = validateRequired(req.body, requiredFields);
 
   if (missing) {
@@ -29,11 +34,6 @@ export const validateIdoso = (req, res, next) => {
   // Validar nome
   if (req.body.nome_completo.length < 3) {
     return errorResponse(res, 'Nome completo deve ter pelo menos 3 caracteres', 400);
-  }
-
-  // Validar idade
-  if (!isValidAge(req.body.idade)) {
-    return errorResponse(res, 'Idade inválida (deve ser entre 0 e 150)', 400);
   }
 
   // Validar sexo
