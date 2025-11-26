@@ -5,12 +5,11 @@ import { api } from '../services/api';
 import { IdosoForm } from '../components/IdosoForm';
 import { Loader } from '../components/Loader';
 import { PageHeader } from '../components/PageHeader';
-import { isValidCPF, isValidAge, cleanCPF } from '../utils/validators';
+import { isValidCPF, cleanCPF } from '../utils/validators';
 
 const initialValues = {
   nome_completo: '',
   data_nascimento: '',
-  idade: '',
   sexo: '',
   naturalidade: '',
   telefone: '',
@@ -84,11 +83,6 @@ export const IdosoCadastro = () => {
   const validateForm = () => {
     if (!values.nome_completo || values.nome_completo.trim().length < 3) {
       toast.error('Nome completo deve ter pelo menos 3 caracteres');
-      return false;
-    }
-
-    if (!values.idade || !isValidAge(values.idade)) {
-      toast.error('Idade inválida (deve ser entre 0 e 150)');
       return false;
     }
 

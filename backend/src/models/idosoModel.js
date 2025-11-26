@@ -1,13 +1,13 @@
 import db from '../services/db.js';
 
 const CAMPOS_SELECT = `
-  id, nome_completo, data_nascimento, idade, sexo, telefone, endereco, numero, bairro, 
+  id, nome_completo, data_nascimento, sexo, telefone, endereco, numero, bairro, 
   cidade, cep, rg, naturalidade, orgao_expedidor, cpf, titulo_eleitoral, zona_eleitoral, 
   secao_eleitoral, municipio_uf, data_inscricao, data_cadastro, status
 `;
 
 const CAMPOS_SELECT_LISTA = `
-  id, nome_completo, idade, sexo, telefone, cpf, data_cadastro, status
+  id, nome_completo, data_nascimento, sexo, telefone, cpf, data_cadastro, status
 `;
 
 export const listarIdosos = async ({ search, status }) => {
@@ -45,7 +45,6 @@ export const criarIdoso = async (dados) => {
   const {
     nome_completo,
     data_nascimento,
-    idade,
     sexo,
     telefone,
     endereco,
@@ -67,18 +66,17 @@ export const criarIdoso = async (dados) => {
 
   const query = `
     INSERT INTO idosos (
-      nome_completo, data_nascimento, idade, sexo, telefone, endereco, numero, bairro,
+      nome_completo, data_nascimento, sexo, telefone, endereco, numero, bairro,
       cidade, cep, rg, naturalidade, orgao_expedidor, cpf, titulo_eleitoral, zona_eleitoral,
       secao_eleitoral, municipio_uf, data_inscricao, status
     )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
     RETURNING *
   `;
 
   const { rows } = await db.query(query, [
     nome_completo,
     data_nascimento || null,
-    idade,
     sexo,
     telefone,
     endereco,
@@ -105,7 +103,6 @@ export const atualizarIdoso = async (id, dados) => {
   const {
     nome_completo,
     data_nascimento,
-    idade,
     sexo,
     telefone,
     endereco,
@@ -129,32 +126,30 @@ export const atualizarIdoso = async (id, dados) => {
     UPDATE idosos
     SET nome_completo = $1,
         data_nascimento = $2,
-        idade = $3,
-        sexo = $4,
-        telefone = $5,
-        endereco = $6,
-        numero = $7,
-        bairro = $8,
-        cidade = $9,
-        cep = $10,
-        rg = $11,
-        naturalidade = $12,
-        orgao_expedidor = $13,
-        cpf = $14,
-        titulo_eleitoral = $15,
-        zona_eleitoral = $16,
-        secao_eleitoral = $17,
-        municipio_uf = $18,
-        data_inscricao = $19,
-        status = $20
-    WHERE id = $21
+        sexo = $3,
+        telefone = $4,
+        endereco = $5,
+        numero = $6,
+        bairro = $7,
+        cidade = $8,
+        cep = $9,
+        rg = $10,
+        naturalidade = $11,
+        orgao_expedidor = $12,
+        cpf = $13,
+        titulo_eleitoral = $14,
+        zona_eleitoral = $15,
+        secao_eleitoral = $16,
+        municipio_uf = $17,
+        data_inscricao = $18,
+        status = $19
+    WHERE id = $20
     RETURNING *
   `;
 
   const { rows } = await db.query(query, [
     nome_completo,
     data_nascimento || null,
-    idade,
     sexo,
     telefone,
     endereco,

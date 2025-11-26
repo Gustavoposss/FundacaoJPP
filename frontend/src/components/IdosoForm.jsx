@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 const fields = [
   // Dados Pessoais
   { name: 'nome_completo', label: 'Nome Completo', type: 'text', required: true, cols: 6 },
-  { name: 'data_nascimento', label: 'Data de Nascimento', type: 'date', cols: 3 },
-  { name: 'idade', label: 'Idade', type: 'number', required: true, cols: 3 },
+  { name: 'data_nascimento', label: 'Data de Nascimento', type: 'date', cols: 6 },
   { name: 'sexo', label: 'Sexo', type: 'select', options: ['Masculino', 'Feminino', 'Outro'], cols: 3 },
   { name: 'naturalidade', label: 'Naturalidade', type: 'text', cols: 3 },
   { name: 'telefone', label: 'Telefone', type: 'text', cols: 3 },
