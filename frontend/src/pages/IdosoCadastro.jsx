@@ -9,14 +9,25 @@ import { isValidCPF, isValidAge, cleanCPF } from '../utils/validators';
 
 const initialValues = {
   nome_completo: '',
+  data_nascimento: '',
   idade: '',
   sexo: '',
+  naturalidade: '',
+  telefone: '',
   status: 'fixo',
   endereco: '',
-  rg: '',
+  numero: '',
+  bairro: '',
+  cidade: '',
+  cep: '',
   cpf: '',
+  rg: '',
+  orgao_expedidor: '',
   titulo_eleitoral: '',
-  telefone: '',
+  zona_eleitoral: '',
+  secao_eleitoral: '',
+  municipio_uf: '',
+  data_inscricao: '',
 };
 
 export const IdosoCadastro = () => {
@@ -37,8 +48,9 @@ export const IdosoCadastro = () => {
         setValues({
           ...initialValues,
           ...idosoData,
-          // Garantir que o CPF seja apenas números
           cpf: idosoData.cpf ? cleanCPF(idosoData.cpf) : '',
+          data_nascimento: idosoData.data_nascimento ? idosoData.data_nascimento.split('T')[0] : '',
+          data_inscricao: idosoData.data_inscricao ? idosoData.data_inscricao.split('T')[0] : '',
         });
       } catch (error) {
         toast.error('Não foi possível carregar os dados do idoso.');
@@ -54,39 +66,37 @@ export const IdosoCadastro = () => {
     const { name, value } = event.target;
     let formattedValue = value;
 
-    // Formatar CPF
     if (name === 'cpf') {
       formattedValue = value.replace(/\D/g, '').slice(0, 11);
     }
 
-    // Formatar telefone
     if (name === 'telefone') {
       formattedValue = value.replace(/\D/g, '').slice(0, 11);
+    }
+
+    if (name === 'cep') {
+      formattedValue = value.replace(/\D/g, '').slice(0, 8);
     }
 
     setValues((prev) => ({ ...prev, [name]: formattedValue }));
   };
 
   const validateForm = () => {
-    // Validar nome
     if (!values.nome_completo || values.nome_completo.trim().length < 3) {
       toast.error('Nome completo deve ter pelo menos 3 caracteres');
       return false;
     }
 
-    // Validar idade
     if (!values.idade || !isValidAge(values.idade)) {
       toast.error('Idade inválida (deve ser entre 0 e 150)');
       return false;
     }
 
-    // Validar sexo
     if (!values.sexo) {
       toast.error('Selecione o sexo');
       return false;
     }
 
-    // Validar CPF
     if (!values.cpf) {
       toast.error('CPF é obrigatório');
       return false;
@@ -103,14 +113,12 @@ export const IdosoCadastro = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validação do formulário
     if (!validateForm()) {
       return;
     }
 
     setSaving(true);
     try {
-      // Formatar CPF antes de enviar
       const dataToSend = {
         ...values,
         cpf: values.cpf.replace(/\D/g, ''),
@@ -159,4 +167,3 @@ export const IdosoCadastro = () => {
     </div>
   );
 };
-
