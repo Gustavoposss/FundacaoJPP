@@ -5,13 +5,24 @@ export const Home = () => {
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-fjpp-blue-DEFAULT to-fjpp-blue-700 text-white py-20 md:py-32">
-        <div className="container mx-auto px-4">
+      <section 
+        className="relative text-white py-20 md:py-32 overflow-hidden"
+        style={{
+          backgroundImage: 'url(/idososimagemdefundohome.svg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Overlay escuro para garantir legibilidade do texto */}
+        <div className="absolute inset-0 bg-black/40"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 drop-shadow-lg">
               Cuidando de quem cuidou de nós
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-200">
+            <p className="text-xl md:text-2xl mb-8 text-white drop-shadow-md">
               A Fundação JPP trabalha para melhorar a qualidade de vida dos idosos e suas famílias através de projetos sociais, culturais e de bem-estar.
             </p>
             <Link
