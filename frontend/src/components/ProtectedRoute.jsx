@@ -7,7 +7,7 @@ export const ProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   if (!isAuthenticated || !token) {
-    return <Navigate to="/" replace state={{ from: location }} />;
+    return <Navigate to="/admin" replace state={{ from: location }} />;
   }
 
   return children;

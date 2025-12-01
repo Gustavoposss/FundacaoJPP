@@ -12,16 +12,29 @@ import { Eventos } from './pages/Eventos';
 import { Presencas } from './pages/Presencas';
 import { Relatorios } from './pages/Relatorios';
 import { NotFound } from './pages/NotFound';
+// Páginas públicas do site institucional
+import { Home } from './public-site/pages/Home';
+import { Sobre } from './public-site/pages/Sobre';
+import { Projetos } from './public-site/pages/Projetos';
+import { Contato } from './public-site/pages/Contato';
 
 const App = () => (
   <AuthProvider>
     <BrowserRouter>
       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
-        <Route path="/" element={<Layout requiresAuth={false} />}>
+        {/* Rotas públicas do site institucional */}
+        <Route path="/" element={<Home />} />
+        <Route path="/sobre" element={<Sobre />} />
+        <Route path="/projetos" element={<Projetos />} />
+        <Route path="/contato" element={<Contato />} />
+
+        {/* Rota de login do sistema interno (área administrativa) */}
+        <Route path="/admin" element={<Layout requiresAuth={false} />}>
           <Route index element={<Login />} />
         </Route>
 
+        {/* Rotas protegidas do sistema interno */}
         <Route
           element={
             <ProtectedRoute>
@@ -37,8 +50,10 @@ const App = () => (
           <Route path="/eventos" element={<Eventos />} />
           <Route path="/presencas" element={<Presencas />} />
           <Route path="/relatorios" element={<Relatorios />} />
-          <Route path="*" element={<NotFound />} />
         </Route>
+
+        {/* 404 para rotas não encontradas */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>
