@@ -6,46 +6,43 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Azuis oficiais (primário) - compatível com sistema interno e site público
-        'fjpp-blue': {
-          50: '#00256C',
-          100: '#00266D',
-          200: '#002773',
-          300: '#002978',
-          400: '#002B7F',
-          500: '#002D84',
-          600: '#002E88',
-          700: '#00308D',
-          800: '#003191',
-          900: '#00349A',
-          DEFAULT: '#003366', // Mantém compatibilidade com sistema interno
-        },
-        // Verdes (secundário) - compatível com sistema interno e site público
-        'fjpp-green': {
-          DEFAULT: '#00a859', // Mantém compatibilidade com sistema interno
-          100: '#3FC255',
-          200: '#4CC95A',
-          300: '#50C759',
-          400: '#55CA5C',
-          500: '#5DCD61',
-          600: '#62D064',
-          700: '#66D166',
-          800: '#6CD46A',
-          900: '#70D56D',
-          'light': '#7BDB74',
-          'lighter': '#8AE27D',
-          'new': '#34BE51', // Nova cor verde oficial para site público
-        },
-        // Vermelhos (alerta/destaque) - compatível com sistema interno e site público
-        'fjpp-red': {
-          DEFAULT: '#e53935', // Mantém compatibilidade com sistema interno
-          100: '#F32626',
-          200: '#F61C1C',
-          300: '#F91414',
-          400: '#FB0C0C',
-          500: '#FD0606',
-          'new': '#F12D2C', // Nova cor vermelha oficial para site público
-        },
+        // Cores principais do sistema interno (mantém compatibilidade)
+        'fjpp-blue': '#003366',
+        'fjpp-green': '#00a859',
+        'fjpp-red': '#e53935',
+        
+        // Azuis oficiais (variantes para site público)
+        'fjpp-blue-50': '#00256C',
+        'fjpp-blue-100': '#00266D',
+        'fjpp-blue-200': '#002773',
+        'fjpp-blue-300': '#002978',
+        'fjpp-blue-400': '#002B7F',
+        'fjpp-blue-500': '#002D84',
+        'fjpp-blue-600': '#002E88',
+        'fjpp-blue-700': '#00308D',
+        'fjpp-blue-800': '#003191',
+        'fjpp-blue-900': '#00349A',
+        'fjpp-blue-DEFAULT': '#013395', // Para site público
+        
+        // Verdes (variantes)
+        'fjpp-green-100': '#3FC255',
+        'fjpp-green-200': '#4CC95A',
+        'fjpp-green-300': '#50C759',
+        'fjpp-green-400': '#55CA5C',
+        'fjpp-green-500': '#5DCD61',
+        'fjpp-green-600': '#62D064',
+        'fjpp-green-700': '#66D166',
+        'fjpp-green-800': '#6CD46A',
+        'fjpp-green-900': '#70D56D',
+        'fjpp-green-DEFAULT': '#34BE51', // Para site público
+        
+        // Vermelhos (variantes)
+        'fjpp-red-100': '#F32626',
+        'fjpp-red-200': '#F61C1C',
+        'fjpp-red-300': '#F91414',
+        'fjpp-red-400': '#FB0C0C',
+        'fjpp-red-500': '#FD0606',
+        
         // Neutras
         'fjpp-white': '#FFFFFF',
         'fjpp-light': '#FAFBFD',
