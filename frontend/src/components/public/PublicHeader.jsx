@@ -22,11 +22,11 @@ export const PublicHeader = () => {
           <Link to="/" className="flex items-center space-x-3">
             <img
               src="/logo-fundacao-jpp.svg"
-              alt="Fundação JPP"
+              alt="Fundação José Possidônio Peixoto"
               className="h-12 w-12"
             />
             <span className="text-xl font-bold text-fjpp-blue-DEFAULT">
-              Fundação JPP
+              Fundação José Possidônio Peixoto
             </span>
           </Link>
 

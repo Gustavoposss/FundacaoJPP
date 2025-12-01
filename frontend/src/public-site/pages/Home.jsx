@@ -23,7 +23,7 @@ export const Home = () => {
               Cuidando de quem cuidou de nós
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-white drop-shadow-md">
-              A Fundação JPP trabalha para melhorar a qualidade de vida dos idosos e suas famílias através de projetos sociais, culturais e de bem-estar.
+              A Fundação José Possidônio Peixoto trabalha para melhorar a qualidade de vida dos idosos e suas famílias através de projetos sociais, culturais e de bem-estar.
             </p>
             <Link
               to="/sobre"

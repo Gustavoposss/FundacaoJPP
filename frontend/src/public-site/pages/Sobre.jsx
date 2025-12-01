@@ -10,7 +10,7 @@ export const Sobre = () => {
             Nossa Jornada de Acolhimento e Esperança
           </h1>
           <p className="text-xl text-center text-gray-200 max-w-3xl mx-auto">
-            Conheça a história da Fundação JPP e nossa missão de transformar vidas através do cuidado e da solidariedade.
+            Conheça a história da Fundação José Possidônio Peixoto e nossa missão de transformar vidas através do cuidado e da solidariedade.
           </p>
         </div>
       </section>

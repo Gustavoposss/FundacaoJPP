@@ -9,7 +9,7 @@ export const PublicFooter = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Sobre */}
           <div>
-            <h3 className="text-lg font-bold mb-4">Fundação JPP</h3>
+            <h3 className="text-lg font-bold mb-4">Fundação José Possidônio Peixoto</h3>
             <p className="text-sm text-gray-300 mb-4">
               Cuidando de quem cuidou de nós. Trabalhamos para melhorar a qualidade de vida dos idosos e suas famílias.
             </p>

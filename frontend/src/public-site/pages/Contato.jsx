@@ -31,7 +31,7 @@ export const Contato = () => {
   };
 
   const whatsappNumber = '5585988313126';
-  const whatsappMessage = encodeURIComponent('Olá! Gostaria de saber mais sobre a Fundação JPP.');
+  const whatsappMessage = encodeURIComponent('Olá! Gostaria de saber mais sobre a Fundação José Possidônio Peixoto.');
 
   return (
     <PublicLayout>
