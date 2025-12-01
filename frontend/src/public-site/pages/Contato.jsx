@@ -169,7 +169,7 @@ export const Contato = () => {
                       Endereço
                     </h3>
                     <p className="text-gray-600">
-                      Rua Ubajara, 2200 — Caucaia
+                      Rua Ubajara, 2200, Parque Albano — Caucaia.
                     </p>
                   </div>
                 </div>
