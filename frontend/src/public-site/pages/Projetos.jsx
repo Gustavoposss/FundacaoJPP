@@ -1,84 +1,100 @@
+import { useState } from 'react';
 import { PublicLayout } from '../../components/public/PublicLayout';
 
 export const Projetos = () => {
-  const projetos = [
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  // Galeria de eventos realizados
+  const eventos = [
     {
       id: 1,
-      title: 'Educação Básica',
-      description: 'Projetos educacionais voltados para crianças e adolescentes da comunidade, oferecendo apoio escolar, atividades de reforço e desenvolvimento de habilidades.',
-      icon: (
-        <svg
-          className="w-12 h-12 text-white"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
-      gradient: 'from-fjpp-blue-DEFAULT to-fjpp-blue-700',
+      nome: 'Outubro Rosa',
+      descricao: 'Campanha de conscientização sobre a prevenção do câncer de mama',
+      mes: 'Outubro',
+      ano: '2024',
+      fotos: [
+        // Placeholder para fotos - você pode substituir por URLs reais
+        { id: 1, url: '/placeholder-outubro-rosa-1.jpg', alt: 'Evento Outubro Rosa 1' },
+        { id: 2, url: '/placeholder-outubro-rosa-2.jpg', alt: 'Evento Outubro Rosa 2' },
+        { id: 3, url: '/placeholder-outubro-rosa-3.jpg', alt: 'Evento Outubro Rosa 3' },
+        { id: 4, url: '/placeholder-outubro-rosa-4.jpg', alt: 'Evento Outubro Rosa 4' },
+        { id: 5, url: '/placeholder-outubro-rosa-5.jpg', alt: 'Evento Outubro Rosa 5' },
+        { id: 6, url: '/placeholder-outubro-rosa-6.jpg', alt: 'Evento Outubro Rosa 6' },
+      ],
+      cor: 'pink',
     },
     {
       id: 2,
-      title: 'Lazer e Cultura',
-      description: 'Atividades recreativas e culturais para promover o bem-estar, a integração social e o desenvolvimento pessoal de todas as idades.',
-      icon: (
-        <svg
-          className="w-12 h-12 text-white"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
-      gradient: 'from-fjpp-green-DEFAULT to-fjpp-green-100',
+      nome: 'Novembro Azul',
+      descricao: 'Campanha de conscientização sobre a saúde do homem e prevenção do câncer de próstata',
+      mes: 'Novembro',
+      ano: '2024',
+      fotos: [
+        { id: 1, url: '/placeholder-novembro-azul-1.jpg', alt: 'Evento Novembro Azul 1' },
+        { id: 2, url: '/placeholder-novembro-azul-2.jpg', alt: 'Evento Novembro Azul 2' },
+        { id: 3, url: '/placeholder-novembro-azul-3.jpg', alt: 'Evento Novembro Azul 3' },
+        { id: 4, url: '/placeholder-novembro-azul-4.jpg', alt: 'Evento Novembro Azul 4' },
+        { id: 5, url: '/placeholder-novembro-azul-5.jpg', alt: 'Evento Novembro Azul 5' },
+        { id: 6, url: '/placeholder-novembro-azul-6.jpg', alt: 'Evento Novembro Azul 6' },
+      ],
+      cor: 'blue',
     },
     {
       id: 3,
-      title: 'Ações Sociais',
-      description: 'Programas de assistência social e apoio às famílias em situação de vulnerabilidade, oferecendo recursos e orientação necessários.',
-      icon: (
-        <svg
-          className="w-12 h-12 text-white"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      ),
-      gradient: 'from-fjpp-blue-700 to-fjpp-blue-DEFAULT',
+      nome: 'Janeiro Branco',
+      descricao: 'Campanha de conscientização sobre a saúde mental',
+      mes: 'Janeiro',
+      ano: '2024',
+      fotos: [
+        { id: 1, url: '/placeholder-janeiro-branco-1.jpg', alt: 'Evento Janeiro Branco 1' },
+        { id: 2, url: '/placeholder-janeiro-branco-2.jpg', alt: 'Evento Janeiro Branco 2' },
+        { id: 3, url: '/placeholder-janeiro-branco-3.jpg', alt: 'Evento Janeiro Branco 3' },
+        { id: 4, url: '/placeholder-janeiro-branco-4.jpg', alt: 'Evento Janeiro Branco 4' },
+      ],
+      cor: 'white',
     },
     {
       id: 4,
-      title: 'Saúde e Bem-Estar',
-      description: 'Iniciativas voltadas para a promoção da saúde física e mental, incluindo atividades físicas, palestras e acompanhamento.',
-      icon: (
-        <svg
-          className="w-12 h-12 text-white"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      ),
-      gradient: 'from-fjpp-green-100 to-fjpp-green-DEFAULT',
+      nome: 'Setembro Amarelo',
+      descricao: 'Campanha de prevenção ao suicídio e valorização da vida',
+      mes: 'Setembro',
+      ano: '2024',
+      fotos: [
+        { id: 1, url: '/placeholder-setembro-amarelo-1.jpg', alt: 'Evento Setembro Amarelo 1' },
+        { id: 2, url: '/placeholder-setembro-amarelo-2.jpg', alt: 'Evento Setembro Amarelo 2' },
+        { id: 3, url: '/placeholder-setembro-amarelo-3.jpg', alt: 'Evento Setembro Amarelo 3' },
+        { id: 4, url: '/placeholder-setembro-amarelo-4.jpg', alt: 'Evento Setembro Amarelo 4' },
+        { id: 5, url: '/placeholder-setembro-amarelo-5.jpg', alt: 'Evento Setembro Amarelo 5' },
+      ],
+      cor: 'yellow',
+    },
+    {
+      id: 5,
+      nome: 'Dia do Idoso',
+      descricao: 'Celebração especial em homenagem aos idosos da comunidade',
+      mes: 'Outubro',
+      ano: '2024',
+      fotos: [
+        { id: 1, url: '/placeholder-dia-idoso-1.jpg', alt: 'Dia do Idoso 1' },
+        { id: 2, url: '/placeholder-dia-idoso-2.jpg', alt: 'Dia do Idoso 2' },
+        { id: 3, url: '/placeholder-dia-idoso-3.jpg', alt: 'Dia do Idoso 3' },
+        { id: 4, url: '/placeholder-dia-idoso-4.jpg', alt: 'Dia do Idoso 4' },
+        { id: 5, url: '/placeholder-dia-idoso-5.jpg', alt: 'Dia do Idoso 5' },
+        { id: 6, url: '/placeholder-dia-idoso-6.jpg', alt: 'Dia do Idoso 6' },
+        { id: 7, url: '/placeholder-dia-idoso-7.jpg', alt: 'Dia do Idoso 7' },
+        { id: 8, url: '/placeholder-dia-idoso-8.jpg', alt: 'Dia do Idoso 8' },
+      ],
+      cor: 'purple',
     },
   ];
+
+  const openModal = (evento) => {
+    setSelectedEvent(evento);
+  };
+
+  const closeModal = () => {
+    setSelectedEvent(null);
+  };
 
   return (
     <PublicLayout>
@@ -86,46 +102,71 @@ export const Projetos = () => {
       <section className="bg-gradient-to-r from-fjpp-blue-DEFAULT to-fjpp-blue-700 text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
-            Nossos Projetos
+            Galeria de Eventos
           </h1>
           <p className="text-xl text-center text-gray-200 max-w-3xl mx-auto">
-            Conheça os projetos que desenvolvemos para transformar vidas e construir um futuro melhor para nossa comunidade.
+            Confira os eventos realizados pela Fundação José Possidônio Peixoto
           </p>
         </div>
       </section>
 
-      {/* Projetos Grid */}
+      {/* Galeria de Eventos */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {projetos.map((projeto) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {eventos.map((evento) => (
               <div
-                key={projeto.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                key={evento.id}
+                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
+                onClick={() => openModal(evento)}
               >
-                <div className={`h-48 bg-gradient-to-br ${projeto.gradient} flex items-center justify-center`}>
-                  {projeto.icon}
+                {/* Imagem de capa do evento */}
+                <div className="relative h-64 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 overflow-hidden">
+                  {evento.fotos && evento.fotos.length > 0 ? (
+                    <img
+                      src={evento.fotos[0].url}
+                      alt={evento.nome}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback para gradiente se a imagem não carregar
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <span className="inline-block px-3 py-1 bg-white/90 text-fjpp-blue-DEFAULT text-sm font-semibold rounded-full">
+                      {evento.mes} {evento.ano}
+                    </span>
+                  </div>
                 </div>
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-fjpp-blue-DEFAULT mb-4">
-                    {projeto.title}
+                
+                {/* Informações do evento */}
+                <div className="p-6">
+                  <h3 className="text-2xl font-bold text-fjpp-blue-DEFAULT mb-2">
+                    {evento.nome}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed mb-6">
-                    {projeto.description}
+                  <p className="text-gray-600 mb-4 line-clamp-2">
+                    {evento.descricao}
                   </p>
-                  <div className="flex items-center text-fjpp-green-DEFAULT font-medium">
-                    <span>Saiba mais</span>
-                    <svg
-                      className="w-5 h-5 ml-2"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M9 5l7 7-7 7" />
-                    </svg>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-500">
+                      {evento.fotos.length} {evento.fotos.length === 1 ? 'foto' : 'fotos'}
+                    </span>
+                    <span className="text-fjpp-green-DEFAULT font-medium flex items-center">
+                      Ver galeria
+                      <svg
+                        className="w-5 h-5 ml-2"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -134,24 +175,83 @@ export const Projetos = () => {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-fjpp-light">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-fjpp-blue-DEFAULT mb-4">
-            Quer Participar dos Nossos Projetos?
-          </h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Entre em contato conosco e descubra como você pode fazer parte dessa transformação.
-          </p>
-          <a
-            href="/contato"
-            className="inline-block px-8 py-3 bg-fjpp-green-DEFAULT text-white font-semibold rounded-lg hover:bg-fjpp-green-100 transition-colors shadow-lg"
+      {/* Modal de Galeria */}
+      {selectedEvent && (
+        <div
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={closeModal}
+        >
+          <div
+            className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
           >
-            Entre em Contato
-          </a>
+            {/* Header do Modal */}
+            <div className="bg-gradient-to-r from-fjpp-blue-DEFAULT to-fjpp-blue-700 text-white p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                  {selectedEvent.nome}
+                </h2>
+                <p className="text-gray-200">{selectedEvent.descricao}</p>
+                <span className="inline-block mt-2 px-3 py-1 bg-white/20 text-sm rounded-full">
+                  {selectedEvent.mes} {selectedEvent.ano}
+                </span>
+              </div>
+              <button
+                onClick={closeModal}
+                className="text-white hover:text-gray-200 transition-colors p-2"
+                aria-label="Fechar"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Grid de Fotos */}
+            <div className="overflow-y-auto p-6 flex-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {selectedEvent.fotos.map((foto) => (
+                  <div
+                    key={foto.id}
+                    className="relative group cursor-pointer overflow-hidden rounded-lg"
+                  >
+                    <img
+                      src={foto.url}
+                      alt={foto.alt}
+                      className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
+                      onError={(e) => {
+                        // Placeholder quando a imagem não carrega
+                        e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e5e7eb' width='400' height='300'/%3E%3Ctext fill='%239ca3af' font-family='sans-serif' font-size='18' dy='10.5' font-weight='bold' x='50%25' y='50%25' text-anchor='middle'%3EFoto em breve%3C/text%3E%3C/svg%3E`;
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <svg
+                        className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                      </svg>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      )}
     </PublicLayout>
   );
 };
-
