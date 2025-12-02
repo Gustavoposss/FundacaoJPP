@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash } from 'react-bootstrap-icons';
+import { Plus, Pencil, Trash, Search } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { api } from '../services/api';
@@ -14,20 +14,43 @@ export const Idosos = () => {
   const [idosos, setIdosos] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const debouncedSearch = useDebounce(search, 1000); // Aguardar 1 segundo após parar de digitar
+  // Debounce de 500ms é o ideal para buscas com requisições ao servidor (boa prática)
+  const debouncedSearch = useDebounce(search, 500);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  // Normaliza a busca: remove espaços extras e aceita CPF com ou sem formatação
+  const normalizeSearch = (searchTerm) => {
+    if (!searchTerm) return '';
+    // Remove espaços extras e converte para minúsculas para busca case-insensitive
+    const normalized = searchTerm.trim().toLowerCase();
+    // Se parecer ser um CPF (apenas números ou com formatação), remove a formatação
+    const numbersOnly = normalized.replace(/\D/g, '');
+    if (numbersOnly.length >= 3 && numbersOnly.length <= 11) {
+      return numbersOnly; // Retorna apenas números para CPF
+    }
+    return normalized; // Retorna o texto normalizado para busca por nome
+  };
+
   useEffect(() => {
     const fetchData = async () => {
+      const normalizedSearch = normalizeSearch(debouncedSearch);
+      
+      // Boa prática: não fazer requisição se a busca tiver menos de 2 caracteres (exceto se estiver vazia)
+      // Se estiver vazia, busca todos; se tiver 1 caractere, não busca (aguarda mais)
+      if (normalizedSearch.length === 1) {
+        return; // Aguarda o usuário digitar mais caracteres
+      }
+
       setLoading(true);
-      setSearching(true);
+      setSearching(normalizedSearch.length > 0);
       try {
         const params = {};
-        if (debouncedSearch.trim()) {
-          params.search = debouncedSearch.trim();
+        // Só adiciona o parâmetro de busca se tiver conteúdo válido
+        if (normalizedSearch && normalizedSearch.length >= 2) {
+          params.search = normalizedSearch;
         }
         if (statusFilter) {
           params.status = statusFilter;
@@ -87,16 +110,24 @@ export const Idosos = () => {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="mb-4 flex gap-3 items-center">
           <div className="flex-1 relative">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              <Search size={18} />
+            </div>
             <input
               type="text"
-              placeholder="Buscar por nome ou CPF (aguarde 1 segundo após digitar)"
+              placeholder="Buscar por nome ou CPF (mínimo 2 caracteres)"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
             />
             {searching && search !== debouncedSearch && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-fjpp-blue"></div>
+              </div>
+            )}
+            {search.length > 0 && search.length < 2 && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <span className="text-xs text-gray-400">Digite pelo menos 2 caracteres</span>
               </div>
             )}
           </div>
