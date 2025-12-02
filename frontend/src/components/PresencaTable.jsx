@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { cleanCPF } from '../utils/validators';
 
 export const PresencaTable = ({ idosos, togglePresenca, onSave, saving }) => (
@@ -26,18 +25,17 @@ export const PresencaTable = ({ idosos, togglePresenca, onSave, saving }) => (
                 <td className="px-4 py-3 text-sm text-gray-900">{idoso.nome_completo}</td>
                 <td className="px-4 py-3 text-sm text-gray-600">{idoso.cpf ? cleanCPF(idoso.cpf) : '-'}</td>
                 <td className="px-4 py-3 text-center">
-                  <button
-                    type="button"
-                    onClick={() => togglePresenca(idoso.id)}
-                    className={classNames(
-                      'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
-                      idoso.presente
-                        ? 'bg-fjpp-green text-white hover:bg-green-600'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    )}
-                  >
-                    {idoso.presente ? 'Presente' : 'Ausente'}
-                  </button>
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={idoso.presente || false}
+                      onChange={() => togglePresenca(idoso.id)}
+                      className="w-5 h-5 text-fjpp-green border-gray-300 rounded focus:ring-fjpp-green focus:ring-2 cursor-pointer"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">
+                      {idoso.presente ? 'Presente' : 'Ausente'}
+                    </span>
+                  </label>
                 </td>
               </tr>
             ))
