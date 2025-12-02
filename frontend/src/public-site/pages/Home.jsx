@@ -117,108 +117,166 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Projetos Section */}
+      {/* Eventos Section */}
       <section className="py-16 bg-fjpp-light">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-fjpp-blue-DEFAULT mb-4">
-              Nossos Projetos
+              Nossos Eventos
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Conheça os projetos que desenvolvemos para melhorar a qualidade de vida da nossa comunidade.
+              Confira os eventos realizados pela Fundação José Possidônio Peixoto
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 flex items-center justify-center">
-                <svg
-                  className="w-20 h-20 text-white opacity-80"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Outubro Rosa */}
+            <Link
+              to="/projetos"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+            >
+              <div className="relative h-48 bg-gradient-to-br from-pink-500 to-pink-600 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="inline-block px-3 py-1 bg-white/90 text-pink-600 text-sm font-semibold rounded-full">
+                    Outubro 2024
+                  </span>
+                </div>
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT mb-2">
-                  Educação Básica
+                <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT mb-2 group-hover:text-fjpp-green-DEFAULT transition-colors">
+                  Outubro Rosa
                 </h3>
-                <p className="text-gray-600 mb-4">
-                  Projetos educacionais voltados para crianças e adolescentes da comunidade.
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  Campanha de conscientização sobre a prevenção do câncer de mama
                 </p>
-                <Link
-                  to="/projetos"
-                  className="text-fjpp-green-DEFAULT font-medium hover:underline"
-                >
-                  Saiba mais →
-                </Link>
+                <span className="text-fjpp-green-DEFAULT font-medium flex items-center text-sm">
+                  Ver galeria
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
+            </Link>
 
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-fjpp-green-DEFAULT to-fjpp-green-100 flex items-center justify-center">
-                <svg
-                  className="w-20 h-20 text-white opacity-80"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            {/* Novembro Azul */}
+            <Link
+              to="/projetos"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+            >
+              <div className="relative h-48 bg-gradient-to-br from-blue-500 to-blue-600 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="inline-block px-3 py-1 bg-white/90 text-blue-600 text-sm font-semibold rounded-full">
+                    Novembro 2024
+                  </span>
+                </div>
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT mb-2">
-                  Lazer e Cultura
+                <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT mb-2 group-hover:text-fjpp-green-DEFAULT transition-colors">
+                  Novembro Azul
                 </h3>
-                <p className="text-gray-600 mb-4">
-                  Atividades recreativas e culturais para promover o bem-estar e a integração social.
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  Campanha de conscientização sobre a saúde do homem
                 </p>
-                <Link
-                  to="/projetos"
-                  className="text-fjpp-green-DEFAULT font-medium hover:underline"
-                >
-                  Saiba mais →
-                </Link>
+                <span className="text-fjpp-green-DEFAULT font-medium flex items-center text-sm">
+                  Ver galeria
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
+            </Link>
 
-            <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-fjpp-blue-700 to-fjpp-blue-DEFAULT flex items-center justify-center">
-                <svg
-                  className="w-20 h-20 text-white opacity-80"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
+            {/* Setembro Amarelo */}
+            <Link
+              to="/projetos"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+            >
+              <div className="relative h-48 bg-gradient-to-br from-yellow-400 to-yellow-500 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="inline-block px-3 py-1 bg-white/90 text-yellow-600 text-sm font-semibold rounded-full">
+                    Setembro 2024
+                  </span>
+                </div>
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT mb-2">
-                  Ações Sociais
+                <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT mb-2 group-hover:text-fjpp-green-DEFAULT transition-colors">
+                  Setembro Amarelo
                 </h3>
-                <p className="text-gray-600 mb-4">
-                  Programas de assistência social e apoio às famílias em situação de vulnerabilidade.
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  Campanha de prevenção ao suicídio e valorização da vida
                 </p>
-                <Link
-                  to="/projetos"
-                  className="text-fjpp-green-DEFAULT font-medium hover:underline"
-                >
-                  Saiba mais →
-                </Link>
+                <span className="text-fjpp-green-DEFAULT font-medium flex items-center text-sm">
+                  Ver galeria
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
               </div>
-            </div>
+            </Link>
+
+            {/* Dia do Idoso */}
+            <Link
+              to="/projetos"
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer group"
+            >
+              <div className="relative h-48 bg-gradient-to-br from-purple-500 to-purple-600 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="inline-block px-3 py-1 bg-white/90 text-purple-600 text-sm font-semibold rounded-full">
+                    Outubro 2024
+                  </span>
+                </div>
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT mb-2 group-hover:text-fjpp-green-DEFAULT transition-colors">
+                  Dia do Idoso
+                </h3>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  Celebração especial em homenagem aos idosos da comunidade
+                </p>
+                <span className="text-fjpp-green-DEFAULT font-medium flex items-center text-sm">
+                  Ver galeria
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
           </div>
 
           <div className="text-center">
@@ -226,7 +284,7 @@ export const Home = () => {
               to="/projetos"
               className="inline-block px-8 py-3 bg-fjpp-blue-DEFAULT text-white font-semibold rounded-lg hover:bg-fjpp-blue-700 transition-colors"
             >
-              Ver Todos os Projetos
+              Ver Todos os Eventos
             </Link>
           </div>
         </div>
