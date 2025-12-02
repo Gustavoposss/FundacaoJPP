@@ -14,16 +14,21 @@ export const Idosos = () => {
   const [idosos, setIdosos] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const debouncedSearch = useDebounce(search, 500); // Aguardar 500ms após parar de digitar
+  const debouncedSearch = useDebounce(search, 1000); // Aguardar 1 segundo após parar de digitar
   const [loading, setLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setSearching(true);
       try {
-        const params = { search: debouncedSearch };
+        const params = {};
+        if (debouncedSearch.trim()) {
+          params.search = debouncedSearch.trim();
+        }
         if (statusFilter) {
           params.status = statusFilter;
         }
@@ -33,6 +38,7 @@ export const Idosos = () => {
         toast.error('Não foi possível carregar a lista de idosos.');
       } finally {
         setLoading(false);
+        setSearching(false);
       }
     };
 
@@ -79,14 +85,21 @@ export const Idosos = () => {
         }
       />
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="mb-4 flex gap-3">
-          <input
-            type="text"
-            placeholder="Buscar por nome ou CPF"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
-          />
+        <div className="mb-4 flex gap-3 items-center">
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              placeholder="Buscar por nome ou CPF (aguarde 1 segundo após digitar)"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+            />
+            {searching && search !== debouncedSearch && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-fjpp-blue"></div>
+              </div>
+            )}
+          </div>
           <select
             value={statusFilter}
             onChange={(event) => setStatusFilter(event.target.value)}
@@ -103,7 +116,6 @@ export const Idosos = () => {
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Idade</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Sexo</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Telefone</th>
@@ -114,7 +126,7 @@ export const Idosos = () => {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                     Nenhum idoso encontrado.
                   </td>
                 </tr>
@@ -122,7 +134,6 @@ export const Idosos = () => {
                 filtered.map((idoso) => (
                   <tr key={idoso.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-900">{idoso.nome_completo}</td>
-                    <td className="px-4 py-3 text-sm text-gray-600">{idoso.idade}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.sexo}</td>
                     <td className="px-4 py-3">
                       <span
