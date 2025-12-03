@@ -1,6 +1,30 @@
 import { PublicLayout } from '../../components/public/PublicLayout';
+import { useState, useEffect } from 'react';
 
 export const Sobre = () => {
+  const [imageErrors, setImageErrors] = useState({});
+
+  // Função para verificar se a imagem existe
+  const checkImageExists = async (src) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+  };
+
+  useEffect(() => {
+    // Verifica se as imagens existem após o componente montar
+    const images = ['/possidonioperfil.svg', '/lucileneperfil.svg', '/gustavoperfil.svg'];
+    images.forEach(async (img) => {
+      const exists = await checkImageExists(img);
+      if (!exists) {
+        console.warn(`Imagem não encontrada: ${img}`);
+        setImageErrors((prev) => ({ ...prev, [img]: true }));
+      }
+    });
+  }, []);
   return (
     <PublicLayout>
       {/* Hero Section */}
@@ -169,24 +193,41 @@ export const Sobre = () => {
             ].map((member, index) => (
               <div key={index} className="text-center">
                 <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white relative">
-                  <img
-                    src={member.image}
-                    alt={member.fullName}
-                    className="w-full h-full object-contain"
-                    style={{
-                      padding: '8px',
-                    }}
-                    loading="lazy"
-                    onError={(e) => {
-                      console.error('Erro ao carregar imagem:', member.image);
-                      console.error('URL tentada:', e.target.src);
-                      e.target.style.display = 'none';
-                      e.target.parentElement.style.backgroundColor = '#e5e7eb';
-                    }}
-                    onLoad={() => {
-                      console.log('Imagem carregada com sucesso:', member.image);
-                    }}
-                  />
+                  {imageErrors[member.image] ? (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                      <svg
+                        className="w-24 h-24 text-gray-400"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                  ) : (
+                    <img
+                      src={member.image}
+                      alt={member.fullName}
+                      className="w-full h-full object-contain"
+                      style={{
+                        padding: '8px',
+                      }}
+                      loading="lazy"
+                      onError={(e) => {
+                        console.error('Erro ao carregar imagem:', member.image);
+                        console.error('URL tentada:', e.target.src);
+                        setImageErrors((prev) => ({ ...prev, [member.image]: true }));
+                        e.target.style.display = 'none';
+                        e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                      }}
+                      onLoad={() => {
+                        console.log('Imagem carregada com sucesso:', member.image);
+                      }}
+                    />
+                  )}
                 </div>
                 <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1 text-lg">
                   {member.fullName}
