@@ -4,12 +4,23 @@ export const Sobre = () => {
   return (
     <PublicLayout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-fjpp-blue-DEFAULT to-fjpp-blue-700 text-white py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
+      <section 
+        className="relative text-white py-16 md:py-24 overflow-hidden"
+        style={{
+          backgroundImage: 'url(/imagemdefundofundacao.svg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Overlay escuro para garantir legibilidade do texto */}
+        <div className="absolute inset-0 bg-black/50"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <h1 className="text-4xl md:text-5xl font-bold text-center mb-4 drop-shadow-lg">
             Nossa Jornada de Acolhimento e Esperança
           </h1>
-          <p className="text-xl text-center text-gray-200 max-w-3xl mx-auto">
+          <p className="text-xl text-center text-gray-200 max-w-3xl mx-auto drop-shadow-md">
             Conheça a história da Fundação José Possidônio Peixoto e nossa missão de transformar vidas através do cuidado e da solidariedade.
           </p>
         </div>
@@ -157,11 +168,14 @@ export const Sobre = () => {
               },
             ].map((member, index) => (
               <div key={index} className="text-center">
-                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white">
+                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white relative">
                   <img
                     src={member.image}
                     alt={member.fullName}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
+                    style={{
+                      padding: '8px',
+                    }}
                     loading="lazy"
                     onError={(e) => {
                       console.error('Erro ao carregar imagem:', member.image);
