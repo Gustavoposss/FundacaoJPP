@@ -172,17 +172,21 @@ export const Sobre = () => {
                   <img
                     src={member.image}
                     alt={member.fullName}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     style={{
                       display: 'block',
+                      padding: '4px',
                     }}
+                    loading="eager"
                     onError={(e) => {
                       console.error('Erro ao carregar imagem:', member.image);
+                      console.error('URL completa:', window.location.origin + member.image);
                       e.target.style.display = 'none';
                       e.target.parentElement.style.backgroundColor = '#e5e7eb';
                     }}
-                    onLoad={() => {
-                      console.log('Imagem carregada:', member.image);
+                    onLoad={(e) => {
+                      console.log('Imagem carregada com sucesso:', member.image);
+                      console.log('Dimensões:', e.target.naturalWidth, 'x', e.target.naturalHeight);
                     }}
                   />
                 </div>
