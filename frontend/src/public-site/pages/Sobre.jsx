@@ -7,7 +7,7 @@ export const Sobre = () => {
       <section 
         className="relative text-white py-16 md:py-24 overflow-hidden"
         style={{
-          backgroundImage: 'url(/imagemdefundofundacao.svg)',
+          backgroundImage: 'url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3kbo_lH7qmwFgfypH0BAXxEyDZcnXG1fOJA&s)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -172,7 +172,7 @@ export const Sobre = () => {
               },
             ].map((member) => (
               <div key={member.id} className="text-center">
-                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white relative">
+                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white">
                   <img
                     src={member.image}
                     alt={`Foto de perfil de ${member.fullName}`}
