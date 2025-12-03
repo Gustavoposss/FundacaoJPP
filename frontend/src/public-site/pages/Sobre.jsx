@@ -135,28 +135,33 @@ export const Sobre = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { name: 'Diretora Geral', role: 'Liderança' },
-              { name: 'Coordenador de Projetos', role: 'Gestão' },
-              { name: 'Voluntário', role: 'Apoio' },
-              { name: 'Voluntário', role: 'Apoio' },
+              { 
+                image: '/possidonioperfil.svg', 
+                name: 'Presidente', 
+                role: 'Liderança' 
+              },
+              { 
+                image: '/lucileneperfil.svg', 
+                name: 'Vice Presidente', 
+                role: 'Gestão' 
+              },
+              { 
+                image: '/gustavoperfil.svg', 
+                name: 'Lider Técnico', 
+                role: 'Tecnologia' 
+              },
             ].map((member, index) => (
               <div key={index} className="text-center">
-                <div className="w-32 h-32 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-16 h-16 text-white"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1">
+                <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1 text-lg">
                   {member.name}
                 </h3>
                 <p className="text-sm text-gray-600">{member.role}</p>
