@@ -168,17 +168,24 @@ export const Sobre = () => {
               },
             ].map((member, index) => (
               <div key={index} className="text-center">
-                <div 
-                  className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white"
-                  style={{
-                    backgroundImage: `url(${member.image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                  }}
-                  role="img"
-                  aria-label={member.fullName}
-                />
+                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white relative">
+                  <img
+                    src={member.image}
+                    alt={member.fullName}
+                    className="w-full h-full object-cover"
+                    style={{
+                      display: 'block',
+                    }}
+                    onError={(e) => {
+                      console.error('Erro ao carregar imagem:', member.image);
+                      e.target.style.display = 'none';
+                      e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                    }}
+                    onLoad={() => {
+                      console.log('Imagem carregada:', member.image);
+                    }}
+                  />
+                </div>
                 <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1 text-lg">
                   {member.fullName}
                 </h3>
