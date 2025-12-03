@@ -149,19 +149,19 @@ export const Sobre = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
               { 
-                image: '/possidonioperfil.svg', 
+                image: '/possidonioperfil.svg?v=1', 
                 fullName: 'Possidonio Peixoto',
                 position: 'Presidente', 
                 role: 'Liderança' 
               },
               { 
-                image: '/lucileneperfil.svg', 
+                image: '/lucileneperfil.svg?v=1', 
                 fullName: 'Lucilene Possidonio',
                 position: 'Vice Presidente', 
                 role: 'Gestão' 
               },
               { 
-                image: '/gustavoperfil.svg', 
+                image: '/gustavoperfil.svg?v=1', 
                 fullName: 'Gustavo Possidonio',
                 position: 'Lider Técnico', 
                 role: 'Tecnologia' 
@@ -177,12 +177,21 @@ export const Sobre = () => {
                       display: 'block',
                       padding: '4px',
                     }}
-                    loading="eager"
+                    crossOrigin="anonymous"
                     onError={(e) => {
                       console.error('Erro ao carregar imagem:', member.image);
                       console.error('URL completa:', window.location.origin + member.image);
-                      e.target.style.display = 'none';
-                      e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                      console.error('Status:', e.target.complete);
+                      // Tentar carregar novamente sem cache
+                      const img = new Image();
+                      img.onload = () => {
+                        e.target.src = member.image + '?t=' + Date.now();
+                      };
+                      img.onerror = () => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                      };
+                      img.src = member.image + '?t=' + Date.now();
                     }}
                     onLoad={(e) => {
                       console.log('Imagem carregada com sucesso:', member.image);
