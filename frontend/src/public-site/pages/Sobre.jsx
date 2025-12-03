@@ -1,13 +1,45 @@
+import { useState, useEffect } from 'react';
 import { PublicLayout } from '../../components/public/PublicLayout';
+import { getPerfilImages, getImageUrl } from '../../services/storageService';
 
 export const Sobre = () => {
+  const [perfilImages, setPerfilImages] = useState({
+    possidonio: '/possidonioperfil.svg',
+    lucilene: '/lucileneperfil.svg',
+    gustavo: '/gustavoperfil.svg',
+  });
+  const [backgroundImage, setBackgroundImage] = useState(
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3kbo_lH7qmwFgfypH0BAXxEyDZcnXG1fOJA&s'
+  );
+
+  useEffect(() => {
+    // Carregar URLs das imagens do Supabase Storage
+    const loadImages = async () => {
+      try {
+        const images = await getPerfilImages();
+        if (images && Object.keys(images).length > 0) {
+          setPerfilImages(images);
+        }
+
+        // Tentar carregar imagem de fundo do Supabase
+        const bgUrl = await getImageUrl('backgrounds', 'sobre-hero.jpg');
+        if (bgUrl) {
+          setBackgroundImage(bgUrl);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar imagens:', error);
+      }
+    };
+
+    loadImages();
+  }, []);
   return (
     <PublicLayout>
       {/* Hero Section */}
       <section 
         className="relative text-white py-16 md:py-24 overflow-hidden"
         style={{
-          backgroundImage: 'url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3kbo_lH7qmwFgfypH0BAXxEyDZcnXG1fOJA&s)',
+          backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -151,21 +183,21 @@ export const Sobre = () => {
             {[
               { 
                 id: 'possidonio',
-                image: '/possidonioperfil.svg', 
+                image: perfilImages.possidonio, 
                 fullName: 'Possidonio Peixoto',
                 position: 'Presidente', 
                 role: 'Liderança' 
               },
               { 
                 id: 'lucilene',
-                image: '/lucileneperfil.svg', 
+                image: perfilImages.lucilene, 
                 fullName: 'Lucilene Possidonio',
                 position: 'Vice Presidente', 
                 role: 'Gestão' 
               },
               { 
                 id: 'gustavo',
-                image: '/gustavoperfil.svg', 
+                image: perfilImages.gustavo, 
                 fullName: 'Gustavo Possidonio',
                 position: 'Lider Técnico', 
                 role: 'Tecnologia' 

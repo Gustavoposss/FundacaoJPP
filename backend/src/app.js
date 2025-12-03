@@ -9,6 +9,7 @@ import presencaRoutes from './routes/presencaRoutes.js';
 import documentoRoutes from './routes/documentoRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import relatorioRoutes from './routes/relatorioRoutes.js';
+import storageRoutes from './routes/storageRoutes.js';
 import { notFoundHandler, errorHandler } from './utils/errorHandler.js';
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.use('/api/presencas', presencaRoutes);
 app.use('/api/documentos', documentoRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/relatorios', relatorioRoutes);
+app.use('/api/storage', storageRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
