@@ -27,11 +27,6 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "app/**": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
 
