@@ -179,8 +179,12 @@ export const Sobre = () => {
                     loading="lazy"
                     onError={(e) => {
                       console.error('Erro ao carregar imagem:', member.image);
+                      console.error('URL tentada:', e.target.src);
                       e.target.style.display = 'none';
                       e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                    }}
+                    onLoad={() => {
+                      console.log('Imagem carregada com sucesso:', member.image);
                     }}
                   />
                 </div>
