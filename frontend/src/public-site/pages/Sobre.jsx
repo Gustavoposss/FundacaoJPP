@@ -139,31 +139,43 @@ export const Sobre = () => {
             {[
               { 
                 image: '/possidonioperfil.svg', 
-                name: 'Presidente', 
+                fullName: 'Possidonio Peixoto',
+                position: 'Presidente', 
                 role: 'Liderança' 
               },
               { 
                 image: '/lucileneperfil.svg', 
-                name: 'Vice Presidente', 
+                fullName: 'Lucilene Possidonio',
+                position: 'Vice Presidente', 
                 role: 'Gestão' 
               },
               { 
                 image: '/gustavoperfil.svg', 
-                name: 'Lider Técnico', 
+                fullName: 'Gustavo Possidonio',
+                position: 'Lider Técnico', 
                 role: 'Tecnologia' 
               },
             ].map((member, index) => (
               <div key={index} className="text-center">
-                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT">
+                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white">
                   <img
                     src={member.image}
-                    alt={member.name}
+                    alt={member.fullName}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    onError={(e) => {
+                      console.error('Erro ao carregar imagem:', member.image);
+                      e.target.style.display = 'none';
+                      e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                    }}
                   />
                 </div>
                 <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1 text-lg">
-                  {member.name}
+                  {member.fullName}
                 </h3>
+                <p className="font-medium text-fjpp-blue-700 mb-1">
+                  {member.position}
+                </p>
                 <p className="text-sm text-gray-600">{member.role}</p>
               </div>
             ))}
