@@ -7,10 +7,11 @@ export const Sobre = () => {
       <section 
         className="relative text-white py-16 md:py-24 overflow-hidden"
         style={{
-          backgroundImage: 'url(/imagemdefundofundacao.svg?v=1)',
+          backgroundImage: 'url(/imagemdefundofundacao.svg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
+          minHeight: '400px',
         }}
       >
         {/* Overlay escuro para garantir legibilidade do texto */}
@@ -149,52 +150,37 @@ export const Sobre = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
               { 
-                image: '/possidonioperfil.svg?v=1', 
+                id: 'possidonio',
+                image: '/possidonioperfil.svg', 
                 fullName: 'Possidonio Peixoto',
                 position: 'Presidente', 
                 role: 'Liderança' 
               },
               { 
-                image: '/lucileneperfil.svg?v=1', 
+                id: 'lucilene',
+                image: '/lucileneperfil.svg', 
                 fullName: 'Lucilene Possidonio',
                 position: 'Vice Presidente', 
                 role: 'Gestão' 
               },
               { 
-                image: '/gustavoperfil.svg?v=1', 
+                id: 'gustavo',
+                image: '/gustavoperfil.svg', 
                 fullName: 'Gustavo Possidonio',
                 position: 'Lider Técnico', 
                 role: 'Tecnologia' 
               },
-            ].map((member, index) => (
-              <div key={index} className="text-center">
+            ].map((member) => (
+              <div key={member.id} className="text-center">
                 <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white relative">
                   <img
                     src={member.image}
-                    alt={member.fullName}
+                    alt={`Foto de perfil de ${member.fullName}`}
                     className="w-full h-full object-cover"
-                    style={{
-                      display: 'block',
-                    }}
-                    crossOrigin="anonymous"
+                    loading="lazy"
                     onError={(e) => {
-                      console.error('Erro ao carregar imagem:', member.image);
-                      console.error('URL completa:', window.location.origin + member.image);
-                      console.error('Status:', e.target.complete);
-                      // Tentar carregar novamente sem cache
-                      const img = new Image();
-                      img.onload = () => {
-                        e.target.src = member.image + '?t=' + Date.now();
-                      };
-                      img.onerror = () => {
-                        e.target.style.display = 'none';
-                        e.target.parentElement.style.backgroundColor = '#e5e7eb';
-                      };
-                      img.src = member.image + '?t=' + Date.now();
-                    }}
-                    onLoad={(e) => {
-                      console.log('Imagem carregada com sucesso:', member.image);
-                      console.log('Dimensões:', e.target.naturalWidth, 'x', e.target.naturalHeight);
+                      e.target.style.display = 'none';
+                      e.target.parentElement.style.backgroundColor = '#e5e7eb';
                     }}
                   />
                 </div>
