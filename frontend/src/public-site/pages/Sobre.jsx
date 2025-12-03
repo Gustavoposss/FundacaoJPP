@@ -7,7 +7,7 @@ export const Sobre = () => {
       <section 
         className="relative text-white py-16 md:py-24 overflow-hidden"
         style={{
-          backgroundImage: 'url(/imagemdefundofundacao.svg)',
+          backgroundImage: 'url(/imagemdefundofundacao.svg?v=1)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -172,10 +172,9 @@ export const Sobre = () => {
                   <img
                     src={member.image}
                     alt={member.fullName}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                     style={{
                       display: 'block',
-                      padding: '4px',
                     }}
                     crossOrigin="anonymous"
                     onError={(e) => {
