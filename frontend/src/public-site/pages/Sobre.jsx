@@ -176,21 +176,9 @@ export const Sobre = () => {
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                   }}
-                >
-                  <img
-                    src={member.image}
-                    alt={member.fullName}
-                    className="w-full h-full object-cover opacity-0"
-                    onError={(e) => {
-                      console.error('Erro ao carregar imagem:', member.image);
-                      e.target.parentElement.style.backgroundImage = 'none';
-                      e.target.parentElement.style.backgroundColor = '#e5e7eb';
-                    }}
-                    onLoad={(e) => {
-                      e.target.style.opacity = '1';
-                    }}
-                  />
-                </div>
+                  role="img"
+                  aria-label={member.fullName}
+                />
                 <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1 text-lg">
                   {member.fullName}
                 </h3>
