@@ -12,6 +12,7 @@ export const Projetos = () => {
       descricao: 'Campanha de conscientização sobre a saúde do homem e prevenção do câncer de próstata',
       mes: 'Novembro',
       ano: '2024',
+      videoUrl: 'https://www.youtube.com/embed/a6KqnthgnMU?start=198',
       fotos: [
         { 
           id: 1, 
@@ -78,18 +79,6 @@ export const Projetos = () => {
 
   return (
     <PublicLayout>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-fjpp-blue-DEFAULT to-fjpp-blue-700 text-white py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
-            Galeria de Eventos
-          </h1>
-          <p className="text-xl text-center text-gray-200 max-w-3xl mx-auto">
-            Confira os eventos realizados pela Fundação José Possidônio Peixoto
-          </p>
-        </div>
-      </section>
-
       {/* Galeria de Eventos */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -193,10 +182,34 @@ export const Projetos = () => {
               </button>
             </div>
 
-            {/* Grid de Fotos */}
+            {/* Conteúdo do Modal */}
             <div className="overflow-y-auto p-6 flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {selectedEvent.fotos.map((foto) => (
+              {/* Vídeo do YouTube (se existir) */}
+              {selectedEvent.videoUrl && (
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-fjpp-blue-DEFAULT mb-4">
+                    Vídeo do Evento
+                  </h3>
+                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                    <iframe
+                      className="absolute top-0 left-0 w-full h-full rounded-lg"
+                      src={selectedEvent.videoUrl}
+                      title={`Vídeo - ${selectedEvent.nome}`}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              )}
+
+              {/* Grid de Fotos */}
+              {selectedEvent.fotos && selectedEvent.fotos.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-fjpp-blue-DEFAULT mb-4">
+                    Galeria de Fotos
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {selectedEvent.fotos.map((foto) => (
                   <div
                     key={foto.id}
                     className="relative group cursor-pointer overflow-hidden rounded-lg"
@@ -224,8 +237,10 @@ export const Projetos = () => {
                       </svg>
                     </div>
                   </div>
-                ))}
-              </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
