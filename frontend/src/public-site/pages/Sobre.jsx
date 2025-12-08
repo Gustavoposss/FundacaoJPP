@@ -192,7 +192,8 @@ export const Sobre = () => {
                   <img
                     src={member.image}
                     alt={`Foto de perfil de ${member.fullName}`}
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full object-cover ${member.id === 'rose' ? 'object-top' : ''}`}
+                    style={member.id === 'rose' ? { objectPosition: 'center top' } : {}}
                     loading="lazy"
                     onError={(e) => {
                       e.target.style.display = 'none';

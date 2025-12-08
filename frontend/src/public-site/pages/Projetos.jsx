@@ -93,65 +93,63 @@ export const Projetos = () => {
       {/* Galeria de Eventos */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {eventos.map((evento) => (
-              <div
-                key={evento.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-                onClick={() => openModal(evento)}
-              >
-                {/* Imagem de capa do evento */}
-                <div className="relative h-64 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 overflow-hidden">
-                  {evento.fotos && evento.fotos.length > 0 ? (
-                    <img
-                      src={evento.fotos[0].url}
-                      alt={evento.nome}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        // Fallback para gradiente se a imagem não carregar
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  ) : null}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <span className="inline-block px-3 py-1 bg-white/90 text-fjpp-blue-DEFAULT text-sm font-semibold rounded-full">
-                      {evento.mes} {evento.ano}
-                    </span>
-                  </div>
-                </div>
-                
-                {/* Informações do evento */}
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-fjpp-blue-DEFAULT mb-2">
-                    {evento.nome}
-                  </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">
-                    {evento.descricao}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      {evento.fotos.length} {evento.fotos.length === 1 ? 'foto' : 'fotos'}
-                    </span>
-                    <span className="text-fjpp-green-DEFAULT font-medium flex items-center">
-                      Ver galeria
-                      <svg
-                        className="w-5 h-5 ml-2"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path d="M9 5l7 7-7 7" />
-                      </svg>
-                    </span>
-                  </div>
+          {eventos.map((evento) => (
+            <div
+              key={evento.id}
+              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer max-w-2xl mx-auto"
+              onClick={() => openModal(evento)}
+            >
+              {/* Imagem de capa do evento */}
+              <div className="relative h-64 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 overflow-hidden">
+                {evento.fotos && evento.fotos.length > 0 ? (
+                  <img
+                    src={evento.fotos[0].url}
+                    alt={evento.nome}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback para gradiente se a imagem não carregar
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                ) : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="inline-block px-3 py-1 bg-white/90 text-fjpp-blue-DEFAULT text-sm font-semibold rounded-full">
+                    {evento.mes} {evento.ano}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
+              
+              {/* Informações do evento */}
+              <div className="p-6">
+                <h3 className="text-2xl font-bold text-fjpp-blue-DEFAULT mb-2">
+                  {evento.nome}
+                </h3>
+                <p className="text-gray-600 mb-4 line-clamp-2">
+                  {evento.descricao}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">
+                    {evento.fotos.length} {evento.fotos.length === 1 ? 'foto' : 'fotos'}
+                  </span>
+                  <span className="text-fjpp-green-DEFAULT font-medium flex items-center">
+                    Ver galeria
+                    <svg
+                      className="w-5 h-5 ml-2"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
