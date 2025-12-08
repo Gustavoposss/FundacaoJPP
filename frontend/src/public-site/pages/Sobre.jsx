@@ -1,38 +1,15 @@
-import { useState, useEffect } from 'react';
 import { PublicLayout } from '../../components/public/PublicLayout';
-import { getPerfilImages, getImageUrl } from '../../services/storageService';
 
 export const Sobre = () => {
-  const [perfilImages, setPerfilImages] = useState({
-    possidonio: '/possidonioperfil.svg',
-    lucilene: '/lucileneperfil.svg',
-    gustavo: '/gustavoperfil.svg',
-  });
-  const [backgroundImage, setBackgroundImage] = useState(
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3kbo_lH7qmwFgfypH0BAXxEyDZcnXG1fOJA&s'
-  );
-
-  useEffect(() => {
-    // Carregar URLs das imagens do Supabase Storage
-    const loadImages = async () => {
-      try {
-        const images = await getPerfilImages();
-        if (images && Object.keys(images).length > 0) {
-          setPerfilImages(images);
-        }
-
-        // Tentar carregar imagem de fundo do Supabase
-        const bgUrl = await getImageUrl('backgrounds', 'sobre-hero.jpg');
-        if (bgUrl) {
-          setBackgroundImage(bgUrl);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar imagens:', error);
-      }
-    };
-
-    loadImages();
-  }, []);
+  // URLs diretas do Supabase Storage
+  const backgroundImage = 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/backgrounds/backgroundpaginasobre.jpeg';
+  
+  const perfilImages = {
+    possidonio: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/possidonioperfil.jpeg',
+    lucilene: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/lucileneperfil.jpeg',
+    gustavo: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/gustavoperfil.jpeg',
+    rose: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/roseperfil.jpeg',
+  };
   return (
     <PublicLayout>
       {/* Hero Section */}
@@ -179,7 +156,7 @@ export const Sobre = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {[
               { 
                 id: 'possidonio',
@@ -201,6 +178,13 @@ export const Sobre = () => {
                 fullName: 'Gustavo Possidonio',
                 position: 'Lider Técnico', 
                 role: 'Tecnologia' 
+              },
+              { 
+                id: 'rose',
+                image: perfilImages.rose, 
+                fullName: 'Rose',
+                position: 'Voluntária', 
+                role: 'Apoio' 
               },
             ].map((member) => (
               <div key={member.id} className="text-center">

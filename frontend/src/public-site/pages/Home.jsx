@@ -8,7 +8,7 @@ export const Home = () => {
       <section 
         className="relative text-white py-20 md:py-32 overflow-hidden"
         style={{
-          backgroundImage: 'url(/idososimagemdefundohome.svg)',
+          backgroundImage: 'url(https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/backgrounds/backgroundpaginahome.jpeg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

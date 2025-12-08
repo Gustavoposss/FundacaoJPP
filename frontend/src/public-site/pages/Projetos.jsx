@@ -8,83 +8,63 @@ export const Projetos = () => {
   const eventos = [
     {
       id: 1,
-      nome: 'Outubro Rosa',
-      descricao: 'Campanha de conscientização sobre a prevenção do câncer de mama',
-      mes: 'Outubro',
-      ano: '2024',
-      fotos: [
-        // Placeholder para fotos - você pode substituir por URLs reais
-        { id: 1, url: '/placeholder-outubro-rosa-1.jpg', alt: 'Evento Outubro Rosa 1' },
-        { id: 2, url: '/placeholder-outubro-rosa-2.jpg', alt: 'Evento Outubro Rosa 2' },
-        { id: 3, url: '/placeholder-outubro-rosa-3.jpg', alt: 'Evento Outubro Rosa 3' },
-        { id: 4, url: '/placeholder-outubro-rosa-4.jpg', alt: 'Evento Outubro Rosa 4' },
-        { id: 5, url: '/placeholder-outubro-rosa-5.jpg', alt: 'Evento Outubro Rosa 5' },
-        { id: 6, url: '/placeholder-outubro-rosa-6.jpg', alt: 'Evento Outubro Rosa 6' },
-      ],
-      cor: 'pink',
-    },
-    {
-      id: 2,
       nome: 'Novembro Azul',
       descricao: 'Campanha de conscientização sobre a saúde do homem e prevenção do câncer de próstata',
       mes: 'Novembro',
       ano: '2024',
       fotos: [
-        { id: 1, url: '/placeholder-novembro-azul-1.jpg', alt: 'Evento Novembro Azul 1' },
-        { id: 2, url: '/placeholder-novembro-azul-2.jpg', alt: 'Evento Novembro Azul 2' },
-        { id: 3, url: '/placeholder-novembro-azul-3.jpg', alt: 'Evento Novembro Azul 3' },
-        { id: 4, url: '/placeholder-novembro-azul-4.jpg', alt: 'Evento Novembro Azul 4' },
-        { id: 5, url: '/placeholder-novembro-azul-5.jpg', alt: 'Evento Novembro Azul 5' },
-        { id: 6, url: '/placeholder-novembro-azul-6.jpg', alt: 'Evento Novembro Azul 6' },
+        { 
+          id: 1, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.51.23%20(1).jpeg', 
+          alt: 'Evento Novembro Azul 1' 
+        },
+        { 
+          id: 2, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.51.23.jpeg', 
+          alt: 'Evento Novembro Azul 2' 
+        },
+        { 
+          id: 3, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.51.27.jpeg', 
+          alt: 'Evento Novembro Azul 3' 
+        },
+        { 
+          id: 4, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.51.28.jpeg', 
+          alt: 'Evento Novembro Azul 4' 
+        },
+        { 
+          id: 5, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.51.29.jpeg', 
+          alt: 'Evento Novembro Azul 5' 
+        },
+        { 
+          id: 6, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.51.44.jpeg', 
+          alt: 'Evento Novembro Azul 6' 
+        },
+        { 
+          id: 7, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.53.35.jpeg', 
+          alt: 'Evento Novembro Azul 7' 
+        },
+        { 
+          id: 8, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.53.36.jpeg', 
+          alt: 'Evento Novembro Azul 8' 
+        },
+        { 
+          id: 9, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.53.37%20(1).jpeg', 
+          alt: 'Evento Novembro Azul 9' 
+        },
+        { 
+          id: 10, 
+          url: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/projetos/NovembroAzul/WhatsApp%20Image%202025-11-26%20at%2019.53.37.jpeg', 
+          alt: 'Evento Novembro Azul 10' 
+        },
       ],
       cor: 'blue',
-    },
-    {
-      id: 3,
-      nome: 'Janeiro Branco',
-      descricao: 'Campanha de conscientização sobre a saúde mental',
-      mes: 'Janeiro',
-      ano: '2024',
-      fotos: [
-        { id: 1, url: '/placeholder-janeiro-branco-1.jpg', alt: 'Evento Janeiro Branco 1' },
-        { id: 2, url: '/placeholder-janeiro-branco-2.jpg', alt: 'Evento Janeiro Branco 2' },
-        { id: 3, url: '/placeholder-janeiro-branco-3.jpg', alt: 'Evento Janeiro Branco 3' },
-        { id: 4, url: '/placeholder-janeiro-branco-4.jpg', alt: 'Evento Janeiro Branco 4' },
-      ],
-      cor: 'white',
-    },
-    {
-      id: 4,
-      nome: 'Setembro Amarelo',
-      descricao: 'Campanha de prevenção ao suicídio e valorização da vida',
-      mes: 'Setembro',
-      ano: '2024',
-      fotos: [
-        { id: 1, url: '/placeholder-setembro-amarelo-1.jpg', alt: 'Evento Setembro Amarelo 1' },
-        { id: 2, url: '/placeholder-setembro-amarelo-2.jpg', alt: 'Evento Setembro Amarelo 2' },
-        { id: 3, url: '/placeholder-setembro-amarelo-3.jpg', alt: 'Evento Setembro Amarelo 3' },
-        { id: 4, url: '/placeholder-setembro-amarelo-4.jpg', alt: 'Evento Setembro Amarelo 4' },
-        { id: 5, url: '/placeholder-setembro-amarelo-5.jpg', alt: 'Evento Setembro Amarelo 5' },
-      ],
-      cor: 'yellow',
-    },
-    {
-      id: 5,
-      nome: 'Dia do Idoso',
-      descricao: 'Celebração especial em homenagem aos idosos da comunidade',
-      mes: 'Outubro',
-      ano: '2024',
-      fotos: [
-        { id: 1, url: '/placeholder-dia-idoso-1.jpg', alt: 'Dia do Idoso 1' },
-        { id: 2, url: '/placeholder-dia-idoso-2.jpg', alt: 'Dia do Idoso 2' },
-        { id: 3, url: '/placeholder-dia-idoso-3.jpg', alt: 'Dia do Idoso 3' },
-        { id: 4, url: '/placeholder-dia-idoso-4.jpg', alt: 'Dia do Idoso 4' },
-        { id: 5, url: '/placeholder-dia-idoso-5.jpg', alt: 'Dia do Idoso 5' },
-        { id: 6, url: '/placeholder-dia-idoso-6.jpg', alt: 'Dia do Idoso 6' },
-        { id: 7, url: '/placeholder-dia-idoso-7.jpg', alt: 'Dia do Idoso 7' },
-        { id: 8, url: '/placeholder-dia-idoso-8.jpg', alt: 'Dia do Idoso 8' },
-      ],
-      cor: 'purple',
     },
   ];
 
