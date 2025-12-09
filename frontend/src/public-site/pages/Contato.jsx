@@ -231,17 +231,6 @@ export const Contato = () => {
                 Falar no WhatsApp
               </a>
 
-              {/* Mapa */}
-              <div className="mt-8">
-                <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-4">
-                  Localização
-                </h3>
-                <div className="w-full h-64 bg-fjpp-gray rounded-lg flex items-center justify-center">
-                  <p className="text-gray-500">
-                    Mapa será integrado aqui
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
