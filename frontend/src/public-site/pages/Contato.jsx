@@ -35,18 +35,6 @@ export const Contato = () => {
 
   return (
     <PublicLayout>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-fjpp-blue-DEFAULT to-fjpp-blue-700 text-white py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
-            Entre em Contato
-          </h1>
-          <p className="text-xl text-center text-gray-200 max-w-3xl mx-auto">
-            Estamos aqui para ajudar. Entre em contato conosco através do formulário abaixo ou pelos nossos canais de comunicação.
-          </p>
-        </div>
-      </section>
-
       {/* Contact Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
