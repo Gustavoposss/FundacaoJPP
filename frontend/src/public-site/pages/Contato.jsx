@@ -30,7 +30,7 @@ export const Contato = () => {
     });
   };
 
-  const whatsappNumber = '5585988313126';
+  const whatsappNumber = '5585999739292';
   const whatsappMessage = encodeURIComponent('Olá! Gostaria de saber mais sobre a Fundação José Possidônio Peixoto.');
 
   return (
@@ -181,10 +181,10 @@ export const Contato = () => {
                       Telefone
                     </h3>
                     <a
-                      href="tel:+5585988313126"
+                    href="tel:+5585999739292"
                       className="text-gray-600 hover:text-fjpp-blue-DEFAULT transition-colors"
                     >
-                      (85) 98831-3126
+                      (85) 99973-9292
                     </a>
                   </div>
                 </div>

@@ -67,10 +67,10 @@ export const PublicFooter = () => {
                 <span className="font-medium">Telefone:</span>
                 <br />
                 <a
-                  href="tel:+5585988313126"
+                  href="tel:+5585999739292"
                   className="hover:text-white transition-colors"
                 >
-                  (85) 98831-3126
+                  (85) 99973-9292
                 </a>
               </li>
               <li>
