@@ -10,6 +10,7 @@ import documentoRoutes from './routes/documentoRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import relatorioRoutes from './routes/relatorioRoutes.js';
 import storageRoutes from './routes/storageRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 import { notFoundHandler, errorHandler } from './utils/errorHandler.js';
 
 dotenv.config();
@@ -42,6 +43,7 @@ app.use('/api/documentos', documentoRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/relatorios', relatorioRoutes);
 app.use('/api/storage', storageRoutes);
+app.use('/api/contact', contactRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
+import { api } from '../../services/api';
 
 export const Contato = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ export const Contato = () => {
     assunto: '',
     mensagem: '',
   });
+  const [isSending, setIsSending] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -17,17 +19,24 @@ export const Contato = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você pode adicionar a lógica para enviar o formulário
-    // Por enquanto, apenas mostra uma mensagem de sucesso
-    toast.success('Mensagem enviada com sucesso! Entraremos em contato em breve.');
-    setFormData({
-      nome: '',
-      email: '',
-      assunto: '',
-      mensagem: '',
-    });
+    setIsSending(true);
+    try {
+      await api.post('/contact', formData);
+      toast.success('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+      setFormData({
+        nome: '',
+        email: '',
+        assunto: '',
+        mensagem: '',
+      });
+    } catch (error) {
+      const message = error?.response?.data?.message || 'Não foi possível enviar sua mensagem. Tente novamente.';
+      toast.error(message);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const whatsappNumber = '5585999739292';
@@ -123,9 +132,14 @@ export const Contato = () => {
 
                 <button
                   type="submit"
-                  className="w-full px-6 py-3 bg-fjpp-blue-DEFAULT text-white font-semibold rounded-lg hover:bg-fjpp-blue-700 transition-colors shadow-lg"
+                  disabled={isSending}
+                  className={`w-full px-6 py-3 text-white font-semibold rounded-lg transition-colors shadow-lg ${
+                    isSending
+                      ? 'bg-fjpp-blue-700 cursor-not-allowed opacity-80'
+                      : 'bg-fjpp-blue-DEFAULT hover:bg-fjpp-blue-700'
+                  }`}
                 >
-                  Enviar Mensagem
+                  {isSending ? 'Enviando...' : 'Enviar Mensagem'}
                 </button>
               </form>
             </div>
