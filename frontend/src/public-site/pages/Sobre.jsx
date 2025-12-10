@@ -9,6 +9,8 @@ export const Sobre = () => {
     lucilene: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/lucileneperfil.jpeg',
     gustavo: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/gustavoperfil.jpeg',
     rose: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/roseperfil.jpeg',
+    gina: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/ginaperfil.jpeg',
+    robison: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/robisonperfil.jpeg',
   };
   return (
     <PublicLayout>
@@ -156,7 +158,7 @@ export const Sobre = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {[
               { 
                 id: 'possidonio',
@@ -184,6 +186,20 @@ export const Sobre = () => {
                 image: perfilImages.rose, 
                 fullName: 'Rose',
                 position: 'Voluntária', 
+                role: 'Apoio' 
+              },
+              { 
+                id: 'gina',
+                image: perfilImages.gina, 
+                fullName: 'Gina Possidonio',
+                position: 'Advogada', 
+                role: 'Jurídica' 
+              },
+              { 
+                id: 'robison',
+                image: perfilImages.robison, 
+                fullName: 'Robinson Ramalho',
+                position: 'Voluntário', 
                 role: 'Apoio' 
               },
             ].map((member) => (
