@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import { PublicLayout } from '../../components/public/PublicLayout';
 
 export const Sobre = () => {
@@ -12,6 +13,31 @@ export const Sobre = () => {
     gina: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/ginaperfil.jpeg',
     robison: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/robisonperfil.jpeg',
   };
+
+  const sponsors = useMemo(
+    () => [
+      {
+        id: 'junior-soares',
+        name: 'Junior Soares',
+        image: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/soaresperfil.png',
+        title: 'Patrocinador',
+      },
+    ],
+    []
+  );
+
+  const [activeSponsor, setActiveSponsor] = useState(0);
+
+  const handlePrevSponsor = () => {
+    if (sponsors.length <= 1) return;
+    setActiveSponsor((prev) => (prev - 1 + sponsors.length) % sponsors.length);
+  };
+
+  const handleNextSponsor = () => {
+    if (sponsors.length <= 1) return;
+    setActiveSponsor((prev) => (prev + 1) % sponsors.length);
+  };
+
   return (
     <PublicLayout>
       {/* Hero Section */}
@@ -226,6 +252,86 @@ export const Sobre = () => {
                 <p className="text-sm text-gray-600">{member.role}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Nossos Parceiros */}
+      <section className="py-16 bg-fjpp-light">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <p className="text-sm uppercase tracking-wide text-fjpp-blue-700 font-semibold">
+              Nossos Parceiros
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-fjpp-blue-DEFAULT mt-2 mb-3">
+              Lista de Patrocinadores
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Agradecemos imensamente o apoio dos nossos patrocinadores. Graças a eles, podemos continuar a nossa missão.
+            </p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            <div className="overflow-hidden rounded-2xl bg-white shadow-lg border border-gray-100">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${activeSponsor * 100}%)` }}
+              >
+                {sponsors.map((sponsor) => (
+                  <div key={sponsor.id} className="w-full flex-shrink-0 px-8 py-10">
+                    <div className="flex flex-col items-center gap-6">
+                      <div className="w-44 h-44 rounded-xl overflow-hidden shadow-md border border-gray-200 bg-gray-50">
+                        <img
+                          src={sponsor.image}
+                          alt={`Logo de ${sponsor.name}`}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement.style.backgroundColor = '#e5e7eb';
+                          }}
+                        />
+                      </div>
+                      <div className="text-center">
+                        <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT">{sponsor.name}</h3>
+                        {sponsor.title && <p className="text-fjpp-blue-700 font-medium">{sponsor.title}</p>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
+              <button
+                type="button"
+                onClick={handlePrevSponsor}
+                className="p-3 rounded-full bg-white shadow border border-gray-200 text-fjpp-blue-DEFAULT hover:bg-fjpp-light transition disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Anterior"
+                disabled={sponsors.length <= 1}
+              >
+                ‹
+              </button>
+              <div className="flex items-center gap-2">
+                {sponsors.map((sponsor, index) => (
+                  <span
+                    key={sponsor.id}
+                    className={`h-2 w-2 rounded-full transition ${
+                      index === activeSponsor ? 'bg-fjpp-blue-DEFAULT w-6' : 'bg-gray-300'
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={handleNextSponsor}
+                className="p-3 rounded-full bg-white shadow border border-gray-200 text-fjpp-blue-DEFAULT hover:bg-fjpp-light transition disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Próximo"
+                disabled={sponsors.length <= 1}
+              >
+                ›
+              </button>
+            </div>
           </div>
         </div>
       </section>
