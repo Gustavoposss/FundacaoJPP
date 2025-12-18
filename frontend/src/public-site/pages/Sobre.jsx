@@ -51,6 +51,17 @@ export const Sobre = () => {
     carregarPatrocinadores();
   }, []);
 
+  // Autoplay do carrossel de patrocinadores (4 segundos)
+  useEffect(() => {
+    if (patrocinadores.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setActiveSponsor((prev) => (prev + 1) % patrocinadores.length);
+    }, 4000); // 4 segundos
+
+    return () => clearInterval(interval);
+  }, [patrocinadores.length]);
+
   return (
     <PublicLayout>
       {/* Hero Section */}
