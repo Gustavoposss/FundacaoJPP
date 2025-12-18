@@ -107,6 +107,23 @@ export const buscarEventoPublicoController = async (req, res) => {
   }
 };
 
+// Endpoint público para listar fotos (sem autenticação)
+export const listarFotosEventoPublicoController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Verificar se o evento é público antes de retornar as fotos
+    const evento = await buscarEventoPorId(id);
+    if (!evento || !evento.exibir_publico) {
+      return errorResponse(res, 'Evento não encontrado ou não é público', 404);
+    }
+    const fotos = await listarFotosEvento(id);
+    return successResponse(res, { fotos });
+  } catch (error) {
+    console.error('Erro ao listar fotos do evento público:', error);
+    return errorResponse(res, 'Erro ao buscar fotos do evento', 500);
+  }
+};
+
 // Endpoints para gerenciar fotos (com autenticação)
 export const listarFotosEventoController = async (req, res) => {
   try {

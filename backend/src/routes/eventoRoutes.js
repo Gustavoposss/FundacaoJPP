@@ -7,6 +7,7 @@ import {
   removerEvento,
   listarEventosPublicosController,
   buscarEventoPublicoController,
+  listarFotosEventoPublicoController,
   listarFotosEventoController,
   adicionarFotoEventoController,
   removerFotoEventoController,
@@ -19,6 +20,7 @@ const router = Router();
 // Rotas públicas (sem autenticação) - devem vir ANTES do router.use(authRequired)
 router.get('/public', listarEventosPublicosController);
 router.get('/public/:id', buscarEventoPublicoController);
+router.get('/public/:id/fotos', listarFotosEventoPublicoController);
 
 // Rotas protegidas (com autenticação)
 router.use(authRequired);

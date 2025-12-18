@@ -13,7 +13,31 @@ export const Projetos = () => {
       try {
         setLoading(true);
         const { data } = await api.get('/eventos/public');
-        setEventos(data.data?.eventos || []);
+        const eventosList = data.data?.eventos || [];
+        
+        // Carregar primeira foto de cada evento para usar como capa
+        const eventosComFotos = await Promise.all(
+          eventosList.map(async (evento) => {
+            try {
+              const fotosData = await api.get(`/eventos/public/${evento.id}/fotos`);
+              const fotos = fotosData.data?.data?.fotos || [];
+              return {
+                ...evento,
+                primeiraFoto: fotos.length > 0 ? fotos[0].foto_url : null,
+                totalFotos: fotos.length
+              };
+            } catch (error) {
+              // Se falhar ao carregar fotos, continua sem foto
+              return {
+                ...evento,
+                primeiraFoto: null,
+                totalFotos: 0
+              };
+            }
+          })
+        );
+        
+        setEventos(eventosComFotos);
       } catch (error) {
         console.error('Erro ao carregar eventos:', error);
         toast.error('Não foi possível carregar os eventos.');
@@ -102,59 +126,94 @@ export const Projetos = () => {
   return (
     <PublicLayout>
       {/* Galeria de Eventos */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4">
-          {eventos.map((evento) => {
-            const { mes, ano } = formatarDataEvento(evento.data_evento);
-            
-            return (
-              <div
-                key={evento.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer max-w-2xl mx-auto mb-8"
-                onClick={() => openModal(evento)}
-              >
-                {/* Imagem de capa do evento */}
-                <div className="relative h-64 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 overflow-hidden">
-                  {/* A primeira foto será carregada quando abrir o modal */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <span className="inline-block px-3 py-1 bg-white/90 text-fjpp-blue-DEFAULT text-sm font-semibold rounded-full">
-                      {mes} {ano}
-                    </span>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-fjpp-blue-DEFAULT mb-4">
+              Nossos Projetos
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Conheça os eventos e projetos realizados pela Fundação José Possidônio Peixoto
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {eventos.map((evento) => {
+              const { mes, ano } = formatarDataEvento(evento.data_evento);
+              
+              return (
+                <div
+                  key={evento.id}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 group"
+                  onClick={() => openModal(evento)}
+                >
+                  {/* Imagem de capa do evento */}
+                  <div className="relative h-64 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 overflow-hidden">
+                    {evento.primeiraFoto ? (
+                      <img
+                        src={evento.primeiraFoto}
+                        alt={evento.nome}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    ) : null}
+                    {/* Overlay gradiente */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    
+                    {/* Badge de data */}
+                    <div className="absolute bottom-4 left-4">
+                      <span className="inline-block px-4 py-2 bg-white/95 backdrop-blur-sm text-fjpp-blue-DEFAULT text-sm font-bold rounded-full shadow-lg">
+                        {mes} {ano}
+                      </span>
+                    </div>
+
+                    {/* Badge de quantidade de fotos */}
+                    {evento.totalFotos > 0 && (
+                      <div className="absolute top-4 right-4">
+                        <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          {evento.totalFotos}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Informações do evento */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-fjpp-blue-DEFAULT mb-2 group-hover:text-fjpp-green-DEFAULT transition-colors">
+                      {evento.nome}
+                    </h3>
+                    <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">
+                      {evento.descricao || 'Sem descrição disponível.'}
+                    </p>
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <span className="text-xs text-gray-500 font-medium">
+                        Clique para ver mais
+                      </span>
+                      <span className="text-fjpp-green-DEFAULT font-semibold flex items-center text-sm group-hover:gap-2 transition-all">
+                        Ver galeria
+                        <svg
+                          className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    </div>
                   </div>
                 </div>
-                
-                {/* Informações do evento */}
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-fjpp-blue-DEFAULT mb-2">
-                    {evento.nome}
-                  </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2">
-                    {evento.descricao || 'Sem descrição disponível.'}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">
-                      Ver detalhes
-                    </span>
-                    <span className="text-fjpp-green-DEFAULT font-medium flex items-center">
-                      Ver galeria
-                      <svg
-                        className="w-5 h-5 ml-2"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path d="M9 5l7 7-7 7" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </section>
 
