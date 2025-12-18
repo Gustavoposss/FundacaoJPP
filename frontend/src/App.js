@@ -9,6 +9,9 @@ import { Idosos } from './pages/Idosos';
 import { IdosoCadastro } from './pages/IdosoCadastro';
 import { IdosoDetalhes } from './pages/IdosoDetalhes';
 import { Eventos } from './pages/Eventos';
+import { EventosPublicos } from './pages/EventosPublicos';
+import { MembrosEquipe } from './pages/MembrosEquipe';
+import { Patrocinadores } from './pages/Patrocinadores';
 import { Presencas } from './pages/Presencas';
 import { Relatorios } from './pages/Relatorios';
 import { NotFound } from './pages/NotFound';
@@ -48,6 +51,9 @@ const App = () => (
           <Route path="/idosos/editar/:id" element={<IdosoCadastro />} />
           <Route path="/idosos/:id" element={<IdosoDetalhes />} />
           <Route path="/eventos" element={<Eventos />} />
+          <Route path="/eventos-publicos" element={<EventosPublicos />} />
+          <Route path="/membros-equipe" element={<MembrosEquipe />} />
+          <Route path="/patrocinadores" element={<Patrocinadores />} />
           <Route path="/presencas" element={<Presencas />} />
           <Route path="/relatorios" element={<Relatorios />} />
         </Route>

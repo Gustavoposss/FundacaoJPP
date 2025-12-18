@@ -1,12 +1,18 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { HouseDoor, People, CalendarEvent, GraphUp } from 'react-bootstrap-icons';
+import { HouseDoor, People, CalendarEvent, GraphUp, Globe, PersonBadge, Award } from 'react-bootstrap-icons';
 
 const menuItems = [
   { to: '/dashboard', label: 'Dashboard', icon: HouseDoor },
   { to: '/idosos', label: 'Idosos', icon: People },
   { to: '/eventos', label: 'Eventos', icon: CalendarEvent },
   { to: '/relatorios', label: 'Relatórios', icon: GraphUp },
+];
+
+const menuItemsSitePublico = [
+  { to: '/eventos-publicos', label: 'Eventos Públicos', icon: Globe },
+  { to: '/membros-equipe', label: 'Membros Equipe', icon: PersonBadge },
+  { to: '/patrocinadores', label: 'Patrocinadores', icon: Award },
 ];
 
 export const Sidebar = ({ collapsed = false }) => {
@@ -67,6 +73,63 @@ export const Sidebar = ({ collapsed = false }) => {
       {/* Navigation */}
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px', padding: '0 12px', marginTop: '16px' }}>
         {menuItems.map((item) => {
+          const IconComponent = item.icon;
+          const isActive = location.pathname === item.to || location.pathname.startsWith(item.to + '/');
+          
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px 16px',
+                borderRadius: '0 12px 12px 0',
+                textDecoration: 'none',
+                color: isActive ? '#00a859' : '#4b5563',
+                backgroundColor: isActive ? '#e0f2e7' : 'transparent',
+                fontWeight: isActive ? 600 : 500,
+                transition: 'all 0.2s ease',
+                justifyContent: collapsed ? 'center' : 'flex-start',
+                paddingLeft: collapsed ? '12px' : '16px'
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = 'rgba(0, 168, 89, 0.08)';
+                  e.currentTarget.style.color = '#00a859';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#4b5563';
+                }
+              }}
+            >
+              <IconComponent
+                size={20}
+                style={{
+                  color: isActive ? '#00a859' : '#9ca3af',
+                  transition: 'color 0.2s ease'
+                }}
+              />
+              {!collapsed && <span>{item.label}</span>}
+            </NavLink>
+          );
+        })}
+        
+        {/* Separador */}
+        {!collapsed && (
+          <div style={{ margin: '16px 0 8px 0', padding: '0 16px' }}>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Site Público
+            </p>
+          </div>
+        )}
+        
+        {/* Menu Site Público */}
+        {menuItemsSitePublico.map((item) => {
           const IconComponent = item.icon;
           const isActive = location.pathname === item.to || location.pathname.startsWith(item.to + '/');
           
