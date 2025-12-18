@@ -51,16 +51,6 @@ export const Sobre = () => {
     carregarPatrocinadores();
   }, []);
 
-  const handlePrevSponsor = () => {
-    if (sponsors.length <= 1) return;
-    setActiveSponsor((prev) => (prev - 1 + sponsors.length) % sponsors.length);
-  };
-
-  const handleNextSponsor = () => {
-    if (sponsors.length <= 1) return;
-    setActiveSponsor((prev) => (prev + 1) % sponsors.length);
-  };
-
   return (
     <PublicLayout>
       {/* Hero Section */}
