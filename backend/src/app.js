@@ -11,6 +11,8 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 import relatorioRoutes from './routes/relatorioRoutes.js';
 import storageRoutes from './routes/storageRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import membroEquipeRoutes from './routes/membroEquipeRoutes.js';
+import patrocinadorRoutes from './routes/patrocinadorRoutes.js';
 import { notFoundHandler, errorHandler } from './utils/errorHandler.js';
 
 dotenv.config();
@@ -44,6 +46,8 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/relatorios', relatorioRoutes);
 app.use('/api/storage', storageRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/membros-equipe', membroEquipeRoutes);
+app.use('/api/patrocinadores', patrocinadorRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

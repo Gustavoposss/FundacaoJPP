@@ -1,32 +1,55 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
+import { api } from '../../services/api';
 
 export const Sobre = () => {
   // URLs diretas do Supabase Storage
   const backgroundImage = 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/backgrounds/backgroundpaginasobre.jpeg';
   
-  const perfilImages = {
-    possidonio: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/possidonioperfil.jpeg',
-    lucilene: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/lucileneperfil.jpeg',
-    gustavo: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/gustavoperfil.jpeg',
-    rose: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/roseperfil.jpeg',
-    gina: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/ginaperfil.jpeg',
-    robison: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/robisonperfil.jpeg',
-  };
-
-  const sponsors = useMemo(
-    () => [
-      {
-        id: 'junior-soares',
-        name: 'Junior Soares',
-        image: 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/perfis/soaresperfil.png',
-        title: 'Patrocinador',
-      },
-    ],
-    []
-  );
-
+  const [membrosEquipe, setMembrosEquipe] = useState([]);
+  const [patrocinadores, setPatrocinadores] = useState([]);
+  const [loadingEquipe, setLoadingEquipe] = useState(true);
+  const [loadingPatrocinadores, setLoadingPatrocinadores] = useState(true);
   const [activeSponsor, setActiveSponsor] = useState(0);
+
+  // Carregar membros da equipe
+  useEffect(() => {
+    const carregarEquipe = async () => {
+      try {
+        setLoadingEquipe(true);
+        const { data } = await api.get('/membros-equipe/public');
+        setMembrosEquipe(data.data?.membros || []);
+      } catch (error) {
+        console.error('Erro ao carregar equipe:', error);
+        toast.error('Não foi possível carregar a equipe.');
+        setMembrosEquipe([]);
+      } finally {
+        setLoadingEquipe(false);
+      }
+    };
+
+    carregarEquipe();
+  }, []);
+
+  // Carregar patrocinadores
+  useEffect(() => {
+    const carregarPatrocinadores = async () => {
+      try {
+        setLoadingPatrocinadores(true);
+        const { data } = await api.get('/patrocinadores/public');
+        setPatrocinadores(data.data?.patrocinadores || []);
+      } catch (error) {
+        console.error('Erro ao carregar patrocinadores:', error);
+        toast.error('Não foi possível carregar os patrocinadores.');
+        setPatrocinadores([]);
+      } finally {
+        setLoadingPatrocinadores(false);
+      }
+    };
+
+    carregarPatrocinadores();
+  }, []);
 
   const handlePrevSponsor = () => {
     if (sponsors.length <= 1) return;
@@ -184,75 +207,46 @@ export const Sobre = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10 max-w-7xl mx-auto">
-            {[
-              { 
-                id: 'possidonio',
-                image: perfilImages.possidonio, 
-                fullName: 'Possidonio Peixoto',
-                position: 'Presidente', 
-                role: 'Liderança' 
-              },
-              { 
-                id: 'lucilene',
-                image: perfilImages.lucilene, 
-                fullName: 'Lucilene Possidonio',
-                position: 'Vice Presidente', 
-                role: 'Gestão' 
-              },
-              { 
-                id: 'gustavo',
-                image: perfilImages.gustavo, 
-                fullName: 'Gustavo Possidonio',
-                position: 'Lider Técnico', 
-                role: 'Tecnologia' 
-              },
-              { 
-                id: 'rose',
-                image: perfilImages.rose, 
-                fullName: 'Rose',
-                position: 'Voluntária', 
-                role: 'Apoio' 
-              },
-              { 
-                id: 'gina',
-                image: perfilImages.gina, 
-                fullName: 'Gina Possidonio',
-                position: 'Advogada', 
-                role: 'Jurídica' 
-              },
-              { 
-                id: 'robison',
-                image: perfilImages.robison, 
-                fullName: 'Robinson Ramalho',
-                position: 'Voluntário', 
-                role: 'Apoio' 
-              },
-            ].map((member) => (
-              <div key={member.id} className="text-center">
-                <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white">
-                  <img
-                    src={member.image}
-                    alt={`Foto de perfil de ${member.fullName}`}
-                    className={`w-full h-full object-cover ${member.id === 'rose' ? 'object-top' : ''}`}
-                    style={member.id === 'rose' ? { objectPosition: 'center top' } : {}}
-                    loading="lazy"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.parentElement.style.backgroundColor = '#e5e7eb';
-                    }}
-                  />
-                </div>
-                <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1 text-lg">
-                  {member.fullName}
-                </h3>
-                <p className="font-medium text-fjpp-blue-700 mb-1">
-                  {member.position}
-                </p>
-                <p className="text-sm text-gray-600">{member.role}</p>
+          {loadingEquipe ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fjpp-blue-DEFAULT mx-auto mb-4"></div>
+                <p className="text-gray-600">Carregando equipe...</p>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : membrosEquipe.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">Nenhum membro da equipe encontrado.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10 max-w-7xl mx-auto">
+              {membrosEquipe.map((member) => (
+                <div key={member.id} className="text-center">
+                  <div className="w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden shadow-lg border-4 border-fjpp-blue-DEFAULT bg-white">
+                    <img
+                      src={member.foto_url}
+                      alt={`Foto de perfil de ${member.nome_completo}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.style.backgroundColor = '#e5e7eb';
+                      }}
+                    />
+                  </div>
+                  <h3 className="font-semibold text-fjpp-blue-DEFAULT mb-1 text-lg">
+                    {member.nome_completo}
+                  </h3>
+                  <p className="font-medium text-fjpp-blue-700 mb-1">
+                    {member.cargo}
+                  </p>
+                  {member.role && (
+                    <p className="text-sm text-gray-600">{member.role}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -271,68 +265,97 @@ export const Sobre = () => {
             </p>
           </div>
 
-          <div className="relative max-w-4xl mx-auto">
-            <div className="overflow-hidden rounded-2xl bg-white shadow-lg border border-gray-100">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${activeSponsor * 100}%)` }}
-              >
-                {sponsors.map((sponsor) => (
-                  <div key={sponsor.id} className="w-full flex-shrink-0 px-8 py-10">
-                    <div className="flex flex-col items-center gap-6">
-                      <div className="w-44 h-44 rounded-xl overflow-hidden shadow-md border border-gray-200 bg-gray-50">
-                        <img
-                          src={sponsor.image}
-                          alt={`Logo de ${sponsor.name}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            e.currentTarget.parentElement.style.backgroundColor = '#e5e7eb';
-                          }}
-                        />
-                      </div>
-                      <div className="text-center">
-                        <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT">{sponsor.name}</h3>
-                        {sponsor.title && <p className="text-fjpp-blue-700 font-medium">{sponsor.title}</p>}
+          {loadingPatrocinadores ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fjpp-blue-DEFAULT mx-auto mb-4"></div>
+                <p className="text-gray-600">Carregando patrocinadores...</p>
+              </div>
+            </div>
+          ) : patrocinadores.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">Nenhum patrocinador encontrado.</p>
+            </div>
+          ) : (
+            <div className="relative max-w-4xl mx-auto">
+              <div className="overflow-hidden rounded-2xl bg-white shadow-lg border border-gray-100">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${activeSponsor * 100}%)` }}
+                >
+                  {patrocinadores.map((sponsor) => (
+                    <div key={sponsor.id} className="w-full flex-shrink-0 px-8 py-10">
+                      <div className="flex flex-col items-center gap-6">
+                        {sponsor.logo_url && (
+                          <div className="w-44 h-44 rounded-xl overflow-hidden shadow-md border border-gray-200 bg-gray-50">
+                            <img
+                              src={sponsor.logo_url}
+                              alt={`Logo de ${sponsor.nome}`}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.parentElement.style.backgroundColor = '#e5e7eb';
+                              }}
+                            />
+                          </div>
+                        )}
+                        <div className="text-center">
+                          <h3 className="text-xl font-semibold text-fjpp-blue-DEFAULT">{sponsor.nome}</h3>
+                          {sponsor.titulo && <p className="text-fjpp-blue-700 font-medium">{sponsor.titulo}</p>}
+                          {sponsor.link_website && (
+                            <a
+                              href={sponsor.link_website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-fjpp-green-DEFAULT hover:underline text-sm mt-2 inline-block"
+                            >
+                              Visitar site
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between mt-4">
-              <button
-                type="button"
-                onClick={handlePrevSponsor}
-                className="p-3 rounded-full bg-white shadow border border-gray-200 text-fjpp-blue-DEFAULT hover:bg-fjpp-light transition disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Anterior"
-                disabled={sponsors.length <= 1}
-              >
-                ‹
-              </button>
-              <div className="flex items-center gap-2">
-                {sponsors.map((sponsor, index) => (
-                  <span
-                    key={sponsor.id}
-                    className={`h-2 w-2 rounded-full transition ${
-                      index === activeSponsor ? 'bg-fjpp-blue-DEFAULT w-6' : 'bg-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <button
-                type="button"
-                onClick={handleNextSponsor}
-                className="p-3 rounded-full bg-white shadow border border-gray-200 text-fjpp-blue-DEFAULT hover:bg-fjpp-light transition disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Próximo"
-                disabled={sponsors.length <= 1}
-              >
-                ›
-              </button>
+              {patrocinadores.length > 1 && (
+                <div className="flex items-center justify-between mt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveSponsor((prev) => (prev - 1 + patrocinadores.length) % patrocinadores.length);
+                    }}
+                    className="p-3 rounded-full bg-white shadow border border-gray-200 text-fjpp-blue-DEFAULT hover:bg-fjpp-light transition"
+                    aria-label="Anterior"
+                  >
+                    ‹
+                  </button>
+                  <div className="flex items-center gap-2">
+                    {patrocinadores.map((sponsor, index) => (
+                      <span
+                        key={sponsor.id}
+                        className={`h-2 w-2 rounded-full transition ${
+                          index === activeSponsor ? 'bg-fjpp-blue-DEFAULT w-6' : 'bg-gray-300'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveSponsor((prev) => (prev + 1) % patrocinadores.length);
+                    }}
+                    className="p-3 rounded-full bg-white shadow border border-gray-200 text-fjpp-blue-DEFAULT hover:bg-fjpp-light transition"
+                    aria-label="Próximo"
+                  >
+                    ›
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
       </section>
     </PublicLayout>
