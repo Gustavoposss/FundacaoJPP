@@ -7,6 +7,7 @@ import { ConfirmModal } from '../components/ConfirmModal';
 import { PageHeader } from '../components/PageHeader';
 import { EventoPublicoForm } from '../components/EventoPublicoForm';
 import { GerenciarFotosModal } from '../components/GerenciarFotosModal';
+import { converterUrlYouTubeParaEmbed } from '../utils/youtubeUtils';
 
 const emptyEvento = { 
   nome: '', 
@@ -48,11 +49,47 @@ export const EventosPublicos = () => {
     event.preventDefault();
     setSaving(true);
     try {
+      // Converter URL do YouTube para formato embed antes de salvar
+      const eventoParaSalvar = { ...current };
+      
+      // Garantir que a data seja enviada no formato YYYY-MM-DD sem timezone
+      // O input type="date" já retorna YYYY-MM-DD, mas vamos garantir
+      if (eventoParaSalvar.data_evento) {
+        if (typeof eventoParaSalvar.data_evento === 'string') {
+          // Se contém 'T' (formato ISO), extrair apenas a data
+          if (eventoParaSalvar.data_evento.includes('T')) {
+            eventoParaSalvar.data_evento = eventoParaSalvar.data_evento.split('T')[0];
+          }
+          // Se já está no formato YYYY-MM-DD, manter
+          // Caso contrário, tentar converter
+          if (!eventoParaSalvar.data_evento.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            const date = new Date(eventoParaSalvar.data_evento);
+            if (!isNaN(date.getTime())) {
+              // Usar componentes locais para evitar problemas de timezone
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const day = String(date.getDate()).padStart(2, '0');
+              eventoParaSalvar.data_evento = `${year}-${month}-${day}`;
+            }
+          }
+        }
+      }
+      
+      if (eventoParaSalvar.video_url) {
+        const urlEmbed = converterUrlYouTubeParaEmbed(eventoParaSalvar.video_url);
+        if (urlEmbed) {
+          eventoParaSalvar.video_url = urlEmbed;
+        } else if (!eventoParaSalvar.video_url.includes('youtube.com/embed/')) {
+          // Se não conseguir converter e não estiver no formato embed, avisar o usuário
+          toast.warning('URL do YouTube pode estar em formato incorreto. Verifique se é uma URL válida.');
+        }
+      }
+      
       if (current.id) {
-        await api.put(`/eventos/${current.id}`, current);
+        await api.put(`/eventos/${current.id}`, eventoParaSalvar);
         toast.success('Evento atualizado com sucesso.');
       } else {
-        await api.post('/eventos', current);
+        await api.post('/eventos', eventoParaSalvar);
         toast.success('Evento criado com sucesso.');
       }
       setShowModal(false);
@@ -171,7 +208,33 @@ export const EventosPublicos = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            setCurrent(evento);
+                            // Formatar data para o formato YYYY-MM-DD (sem timezone)
+                            // Se a data vier como string ISO (com T e timezone), extrair apenas YYYY-MM-DD
+                            let dataFormatada = '';
+                            if (evento.data_evento) {
+                              if (typeof evento.data_evento === 'string' && evento.data_evento.includes('T')) {
+                                // Extrair apenas a parte da data (YYYY-MM-DD)
+                                dataFormatada = evento.data_evento.split('T')[0];
+                              } else if (typeof evento.data_evento === 'string' && evento.data_evento.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                                // Já está no formato correto
+                                dataFormatada = evento.data_evento;
+                              } else {
+                                // Tentar converter usando data local para evitar problemas de timezone
+                                const date = new Date(evento.data_evento);
+                                if (!isNaN(date.getTime())) {
+                                  const year = date.getFullYear();
+                                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                                  const day = String(date.getDate()).padStart(2, '0');
+                                  dataFormatada = `${year}-${month}-${day}`;
+                                }
+                              }
+                            }
+                            
+                            const eventoFormatado = {
+                              ...evento,
+                              data_evento: dataFormatada
+                            };
+                            setCurrent(eventoFormatado);
                             setShowModal(true);
                           }}
                           className="p-2 text-fjpp-blue hover:bg-fjpp-light rounded-lg transition-colors"
