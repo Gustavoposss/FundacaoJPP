@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
 import { api } from '../../services/api';
+import { converterUrlYouTubeParaEmbed } from '../../utils/youtubeUtils';
 
 export const Projetos = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -77,10 +78,13 @@ export const Projetos = () => {
         alt: foto.alt_text || `Foto do evento ${eventoCompleto.nome}`
       })) || [];
       
+      // Converter URL do YouTube para formato de embed se necessário
+      const videoUrlEmbed = converterUrlYouTubeParaEmbed(eventoCompleto.video_url);
+      
       setSelectedEvent({
         ...eventoCompleto,
         fotos: fotosFormatadas,
-        videoUrl: eventoCompleto.video_url,
+        videoUrl: videoUrlEmbed,
         ...formatarDataEvento(eventoCompleto.data_evento)
       });
     } catch (error) {

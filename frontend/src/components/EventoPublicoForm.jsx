@@ -72,7 +72,8 @@ export const EventoPublicoForm = ({ values, onChange, onSubmit, loading }) => (
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
         />
         <p className="mt-1 text-xs text-gray-500">
-          Cole a URL completa do embed do YouTube (ex: https://www.youtube.com/embed/VIDEO_ID)
+          Cole a URL do YouTube (ex: https://www.youtube.com/watch?v=VIDEO_ID ou https://youtu.be/VIDEO_ID). 
+          A conversão para formato embed será feita automaticamente.
         </p>
       </div>
       <div>
