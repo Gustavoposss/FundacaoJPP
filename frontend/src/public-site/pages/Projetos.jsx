@@ -3,11 +3,19 @@ import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
 import { api } from '../../services/api';
 import { converterUrlYouTubeParaEmbed } from '../../utils/youtubeUtils';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 export const Projetos = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  usePageMeta({
+    title: 'Projetos Sociais – Fundação José Possidônio Peixoto',
+    description:
+      'Veja os projetos e eventos que realizamos para promover assistência, cultura, lazer e saúde, fortalecendo vínculos e valorizando a pessoa idosa.',
+    url: 'https://fundacaojpp.com/projetos',
+  });
 
   useEffect(() => {
     const carregarEventos = async () => {

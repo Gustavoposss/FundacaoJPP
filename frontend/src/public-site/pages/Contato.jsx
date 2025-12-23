@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
 import { api } from '../../services/api';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 export const Contato = () => {
   const [formData, setFormData] = useState({
@@ -41,6 +42,13 @@ export const Contato = () => {
 
   const whatsappNumber = '5585999739292';
   const whatsappMessage = encodeURIComponent('Olá! Gostaria de saber mais sobre a Fundação José Possidônio Peixoto.');
+
+  usePageMeta({
+    title: 'Contato – Fundação José Possidônio Peixoto',
+    description:
+      'Fale conosco para parcerias, doações ou dúvidas. Estamos à disposição para apoiar e ampliar nossas ações sociais.',
+    url: 'https://fundacaojpp.com/contato',
+  });
 
   return (
     <PublicLayout>

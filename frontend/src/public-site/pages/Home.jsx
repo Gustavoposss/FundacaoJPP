@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
 import { PublicLayout } from '../../components/public/PublicLayout';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 export const Home = () => {
+  usePageMeta({
+    title: 'Fundação José Possidônio Peixoto',
+    description:
+      'Promovemos bem-estar, dignidade e qualidade de vida de idosos e suas famílias por meio de ações sociais, educacionais e culturais em Caucaia.',
+    url: 'https://fundacaojpp.com/',
+  });
+
   return (
     <PublicLayout>
       {/* Hero Section */}

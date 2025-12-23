@@ -2,10 +2,18 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
 import { api } from '../../services/api';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 export const Sobre = () => {
   // URLs diretas do Supabase Storage
   const backgroundImage = 'https://rogljnlbatesppkmlkey.supabase.co/storage/v1/object/public/backgrounds/backgroundpaginasobre.jpeg';
+
+  usePageMeta({
+    title: 'Sobre a Fundação José Possidônio Peixoto',
+    description:
+      'Conheça nossa história, missão e a equipe que trabalha para acolher e apoiar idosos e suas famílias com responsabilidade e transparência.',
+    url: 'https://fundacaojpp.com/sobre',
+  });
   
   const [membrosEquipe, setMembrosEquipe] = useState([]);
   const [patrocinadores, setPatrocinadores] = useState([]);
