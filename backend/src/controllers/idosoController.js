@@ -71,12 +71,19 @@ export const atualizarIdosoExistente = async (req, res) => {
     return successResponse(res, { idoso: idosoAtualizado }, 'Idoso atualizado com sucesso');
   } catch (error) {
     console.error('Erro ao atualizar idoso:', error);
+    console.error('Detalhes do erro:', {
+      code: error.code,
+      message: error.message,
+      detail: error.detail,
+      constraint: error.constraint,
+      stack: error.stack
+    });
     
     // Verificar se é erro de constraint do banco (status inválido)
-    if (error.code === '23514' || error.message?.includes('check constraint') || error.message?.includes('idosos_status_check')) {
+    if (error.code === '23514' || error.message?.includes('check constraint') || error.message?.includes('idosos_status_check') || error.constraint === 'idosos_status_check') {
       return errorResponse(
         res,
-        'Status inválido. Certifique-se de que a migration add_inadimplente_status.sql foi executada no banco de dados.',
+        'Status inválido. Certifique-se de que a migration add_inadimplente_status.sql foi executada no banco de dados. Erro: ' + (error.detail || error.message),
         400
       );
     }
@@ -86,7 +93,12 @@ export const atualizarIdosoExistente = async (req, res) => {
       return errorResponse(res, 'Já existe um idoso cadastrado com este CPF', 400);
     }
     
-    return errorResponse(res, error.message || 'Erro ao atualizar idoso', 500);
+    // Retornar mensagem mais detalhada em desenvolvimento
+    const errorMessage = process.env.NODE_ENV === 'production' 
+      ? 'Erro ao atualizar idoso. Verifique os logs do servidor.' 
+      : `Erro ao atualizar idoso: ${error.message || error.detail || 'Erro desconhecido'}`;
+    
+    return errorResponse(res, errorMessage, 500);
   }
 };
 
