@@ -50,6 +50,15 @@ export const criarNovoIdoso = async (req, res) => {
       );
     }
     
+    // Verificar se é erro de tamanho da coluna (status muito longo)
+    if (error.code === '22001' || error.message?.includes('value too long for type character varying')) {
+      return errorResponse(
+        res,
+        'Erro: A coluna status é muito pequena. Execute a migration fix_status_column_size.sql para aumentar o tamanho da coluna.',
+        400
+      );
+    }
+    
     // Verificar se é erro de violação de constraint única (CPF duplicado, etc)
     if (error.code === '23505') {
       return errorResponse(res, 'Já existe um idoso cadastrado com este CPF', 400);
@@ -84,6 +93,15 @@ export const atualizarIdosoExistente = async (req, res) => {
       return errorResponse(
         res,
         'Status inválido. Certifique-se de que a migration add_inadimplente_status.sql foi executada no banco de dados. Erro: ' + (error.detail || error.message),
+        400
+      );
+    }
+    
+    // Verificar se é erro de tamanho da coluna (status muito longo)
+    if (error.code === '22001' || error.message?.includes('value too long for type character varying')) {
+      return errorResponse(
+        res,
+        'Erro: A coluna status é muito pequena. Execute a migration fix_status_column_size.sql para aumentar o tamanho da coluna.',
         400
       );
     }

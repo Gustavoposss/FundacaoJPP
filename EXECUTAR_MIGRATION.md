@@ -1,19 +1,38 @@
-# ⚠️ IMPORTANTE: Executar Migration do Banco de Dados
+# ⚠️ IMPORTANTE: Executar Migrations do Banco de Dados
 
-## Problema
-O erro 500 ao atualizar idosos ocorre porque o banco de dados ainda não foi atualizado com a migration que permite o status 'inadimplente'.
+## Problemas Identificados
+1. **Constraint do status:** A coluna `status` só aceita 'fixo' e 'espera'. Precisamos adicionar 'inadimplente'.
+2. **Tamanho da coluna:** A coluna `status` foi criada com `VARCHAR(10)`, mas "inadimplente" tem 12 caracteres. Precisamos aumentar para `VARCHAR(20)`.
 
-**Status atual da tabela:** A coluna `status` só aceita 'fixo' e 'espera'. Precisamos adicionar 'inadimplente'.
+## ⚠️ ERRO ATUAL
+Se você está vendo o erro: `value too long for type character varying(10)`, significa que precisa executar a migration para aumentar o tamanho da coluna.
 
 ## Solução
 Execute a migration no seu banco de dados PostgreSQL:
 
 ### ✅ Opção 1: Via Supabase SQL Editor (MAIS FÁCIL)
+
+**Execute AMBAS as migrations nesta ordem:**
+
+#### Migration 1: Aumentar tamanho da coluna status
 1. Acesse o Supabase Dashboard: https://supabase.com/dashboard
 2. Selecione seu projeto `fundacaojpp`
 3. Vá em **SQL Editor** (menu lateral)
 4. Clique em **New Query**
 5. Cole e execute este SQL:
+
+```sql
+-- Alterar o tipo da coluna status de VARCHAR(10) para VARCHAR(20)
+ALTER TABLE idosos 
+ALTER COLUMN status TYPE VARCHAR(20);
+```
+
+6. Clique em **Run** ou pressione `Ctrl+Enter`
+7. Você deve ver: "Success. No rows returned"
+
+#### Migration 2: Adicionar constraint para 'inadimplente'
+8. Ainda no SQL Editor, clique em **New Query** novamente
+9. Cole e execute este SQL:
 
 ```sql
 -- Remover o constraint antigo
@@ -24,10 +43,12 @@ ALTER TABLE idosos
 ADD CONSTRAINT idosos_status_check CHECK (status IN ('fixo', 'espera', 'inadimplente'));
 ```
 
-6. Clique em **Run** ou pressione `Ctrl+Enter`
-7. Você deve ver uma mensagem de sucesso
+10. Clique em **Run** ou pressione `Ctrl+Enter`
+11. Você deve ver: "Success. No rows returned"
 
-**OU** use o arquivo simplificado: `backend/migrations/add_inadimplente_status_supabase.sql`
+**OU** use os arquivos simplificados:
+- `backend/migrations/fix_status_column_size_supabase.sql` (primeiro)
+- `backend/migrations/add_inadimplente_status_supabase.sql` (depois)
 
 ### Opção 1: Via psql (Recomendado)
 ```bash
