@@ -40,7 +40,22 @@ export const criarNovoIdoso = async (req, res) => {
     return successResponse(res, { idoso: idosoCriado }, 'Idoso cadastrado com sucesso');
   } catch (error) {
     console.error('Erro ao criar idoso:', error);
-    return errorResponse(res, 'Erro ao criar idoso', 500);
+    
+    // Verificar se é erro de constraint do banco (status inválido)
+    if (error.code === '23514' || error.message?.includes('check constraint') || error.message?.includes('idosos_status_check')) {
+      return errorResponse(
+        res,
+        'Status inválido. Certifique-se de que a migration add_inadimplente_status.sql foi executada no banco de dados.',
+        400
+      );
+    }
+    
+    // Verificar se é erro de violação de constraint única (CPF duplicado, etc)
+    if (error.code === '23505') {
+      return errorResponse(res, 'Já existe um idoso cadastrado com este CPF', 400);
+    }
+    
+    return errorResponse(res, error.message || 'Erro ao criar idoso', 500);
   }
 };
 
@@ -56,7 +71,22 @@ export const atualizarIdosoExistente = async (req, res) => {
     return successResponse(res, { idoso: idosoAtualizado }, 'Idoso atualizado com sucesso');
   } catch (error) {
     console.error('Erro ao atualizar idoso:', error);
-    return errorResponse(res, 'Erro ao atualizar idoso', 500);
+    
+    // Verificar se é erro de constraint do banco (status inválido)
+    if (error.code === '23514' || error.message?.includes('check constraint') || error.message?.includes('idosos_status_check')) {
+      return errorResponse(
+        res,
+        'Status inválido. Certifique-se de que a migration add_inadimplente_status.sql foi executada no banco de dados.',
+        400
+      );
+    }
+    
+    // Verificar se é erro de violação de constraint única (CPF duplicado, etc)
+    if (error.code === '23505') {
+      return errorResponse(res, 'Já existe um idoso cadastrado com este CPF', 400);
+    }
+    
+    return errorResponse(res, error.message || 'Erro ao atualizar idoso', 500);
   }
 };
 
