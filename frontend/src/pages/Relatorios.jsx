@@ -337,8 +337,9 @@ export const Relatorios = () => {
                       onChange={(e) => handleFiltroChange('status', e.target.value)}
                     >
                       <option value="">Todos</option>
-                      <option value="fixo">Fixo</option>
+                      <option value="fixo">Fixos</option>
                       <option value="espera">Espera</option>
+                      <option value="inadimplente">Inadimplentes</option>
                     </select>
                   </div>
                   <div>

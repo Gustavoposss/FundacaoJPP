@@ -12,21 +12,19 @@ import { cleanCPF } from '../utils/validators';
 export const Idosos = () => {
   const navigate = useNavigate();
   const [idosos, setIdosos] = useState([]);
+  const [filteredIdosos, setFilteredIdosos] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  // Debounce de 500ms é o ideal para buscas com requisições ao servidor (boa prática)
+  // Debounce de 500ms para evitar interrupção durante a digitação (boa prática)
   const debouncedSearch = useDebounce(search, 500);
   const [loading, setLoading] = useState(true);
-  const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   // Normaliza a busca: remove espaços extras e aceita CPF com ou sem formatação
   const normalizeSearch = (searchTerm) => {
     if (!searchTerm) return '';
-    // Remove espaços extras e converte para minúsculas para busca case-insensitive
     const normalized = searchTerm.trim().toLowerCase();
-    // Se parecer ser um CPF (apenas números ou com formatação), remove a formatação
     const numbersOnly = normalized.replace(/\D/g, '');
     if (numbersOnly.length >= 3 && numbersOnly.length <= 11) {
       return numbersOnly; // Retorna apenas números para CPF
@@ -34,48 +32,53 @@ export const Idosos = () => {
     return normalized; // Retorna o texto normalizado para busca por nome
   };
 
+  // Carrega todos os idosos uma única vez ao montar o componente
   useEffect(() => {
     const fetchData = async () => {
-      const normalizedSearch = normalizeSearch(debouncedSearch);
-      
-      // Boa prática: não fazer requisição se a busca tiver menos de 2 caracteres (exceto se estiver vazia)
-      // Se estiver vazia, busca todos; se tiver 1 caractere, não busca (aguarda mais)
-      if (normalizedSearch.length === 1) {
-        return; // Aguarda o usuário digitar mais caracteres
-      }
-
       setLoading(true);
-      setSearching(normalizedSearch.length > 0);
       try {
-        const params = {};
-        // Só adiciona o parâmetro de busca se tiver conteúdo válido
-        if (normalizedSearch && normalizedSearch.length >= 2) {
-          params.search = normalizedSearch;
-        }
-        if (statusFilter) {
-          params.status = statusFilter;
-        }
-        const { data } = await api.get('/idosos', { params });
-        setIdosos(data.data?.idosos || []);
+        const { data } = await api.get('/idosos');
+        const fetchedIdosos = data.data?.idosos || [];
+        setIdosos(fetchedIdosos);
+        setFilteredIdosos(fetchedIdosos);
       } catch (error) {
         toast.error('Não foi possível carregar a lista de idosos.');
       } finally {
         setLoading(false);
-        setSearching(false);
       }
     };
 
     fetchData();
-  }, [debouncedSearch, statusFilter]);
+  }, []);
 
-  // Remover filtro local, pois a busca já é feita no backend
-  const filtered = idosos;
+  // Filtra os idosos localmente baseado na busca e status (igual Presencas.jsx)
+  useEffect(() => {
+    const normalizedSearch = normalizeSearch(debouncedSearch);
+    let filtered = [...idosos];
+
+    // Aplica filtro de busca (nome ou CPF)
+    if (normalizedSearch && normalizedSearch.length >= 2) {
+      filtered = filtered.filter((idoso) => {
+        const nomeMatch = idoso.nome_completo?.toLowerCase().includes(normalizedSearch);
+        const cpfMatch = idoso.cpf?.replace(/\D/g, '').includes(normalizedSearch);
+        return nomeMatch || cpfMatch;
+      });
+    }
+
+    // Aplica filtro de status
+    if (statusFilter) {
+      filtered = filtered.filter((idoso) => idoso.status === statusFilter);
+    }
+
+    setFilteredIdosos(filtered);
+  }, [debouncedSearch, statusFilter, idosos]);
 
   const handleDelete = async () => {
     try {
       await api.delete(`/idosos/${selected.id}`);
       toast.success('Idoso excluído com sucesso.');
       setIdosos((prev) => prev.filter((idoso) => idoso.id !== selected.id));
+      setFilteredIdosos((prev) => prev.filter((idoso) => idoso.id !== selected.id));
     } catch (error) {
       toast.error('Erro ao excluir idoso.');
     } finally {
@@ -120,11 +123,6 @@ export const Idosos = () => {
               onChange={(event) => setSearch(event.target.value)}
               className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
             />
-            {searching && search !== debouncedSearch && (
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-fjpp-blue"></div>
-              </div>
-            )}
             {search.length > 0 && search.length < 2 && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <span className="text-xs text-gray-400">Digite pelo menos 2 caracteres</span>
@@ -137,8 +135,9 @@ export const Idosos = () => {
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
           >
             <option value="">Todos os status</option>
-            <option value="fixo">Fixo</option>
+            <option value="fixo">Fixos</option>
             <option value="espera">Espera</option>
+            <option value="inadimplente">Inadimplentes</option>
           </select>
         </div>
 
@@ -155,14 +154,14 @@ export const Idosos = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 ? (
+              {filteredIdosos.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                     Nenhum idoso encontrado.
                   </td>
                 </tr>
               ) : (
-                filtered.map((idoso) => (
+                filteredIdosos.map((idoso) => (
                   <tr key={idoso.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-900">{idoso.nome_completo}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.sexo}</td>
@@ -171,10 +170,12 @@ export const Idosos = () => {
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           idoso.status === 'fixo'
                             ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
+                            : idoso.status === 'espera'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-red-100 text-red-800'
                         }`}
                       >
-                        {idoso.status === 'fixo' ? 'Fixo' : 'Espera'}
+                        {idoso.status === 'fixo' ? 'Fixos' : idoso.status === 'espera' ? 'Espera' : 'Inadimplentes'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.telefone || '-'}</td>

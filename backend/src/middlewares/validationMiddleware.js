@@ -53,8 +53,8 @@ export const validateIdoso = (req, res, next) => {
   }
 
   // Validar status (se fornecido)
-  if (req.body.status && !['fixo', 'espera'].includes(req.body.status)) {
-    return errorResponse(res, 'Status inválido (deve ser "fixo" ou "espera")', 400);
+  if (req.body.status && !['fixo', 'espera', 'inadimplente'].includes(req.body.status)) {
+    return errorResponse(res, 'Status inválido (deve ser "fixo", "espera" ou "inadimplente")', 400);
   }
 
   next();

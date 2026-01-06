@@ -7,7 +7,7 @@ const fields = [
   { name: 'sexo', label: 'Sexo', type: 'select', options: ['Masculino', 'Feminino', 'Outro'], required: true, cols: 3 },
   { name: 'naturalidade', label: 'Naturalidade', type: 'text', required: true, cols: 3 },
   { name: 'telefone', label: 'Telefone', type: 'text', required: true, cols: 3 },
-  { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'espera'], optionLabels: { 'fixo': 'Fixo', 'espera': 'Espera' }, required: true, cols: 3 },
+  { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'espera', 'inadimplente'], optionLabels: { 'fixo': 'Fixos', 'espera': 'Espera', 'inadimplente': 'Inadimplentes' }, required: true, cols: 3 },
   
   // Endereço
   { name: 'endereco', label: 'Endereço', type: 'text', required: true, cols: 6 },

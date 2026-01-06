@@ -178,8 +178,9 @@ export const Presencas = () => {
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
               >
                 <option value="">Todos os status</option>
-                <option value="fixo">Fixo</option>
+                <option value="fixo">Fixos</option>
                 <option value="espera">Espera</option>
+                <option value="inadimplente">Inadimplentes</option>
               </select>
             </div>
 
