@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { X, Plus, Trash } from 'react-bootstrap-icons';
 import { api } from '../services/api';
@@ -11,11 +11,7 @@ export const GerenciarFotosModal = ({ evento, onClose }) => {
   const [adicionando, setAdicionando] = useState(false);
   const [removendo, setRemovendo] = useState(null);
 
-  useEffect(() => {
-    carregarFotos();
-  }, [evento.id]);
-
-  const carregarFotos = async () => {
+  const carregarFotos = useCallback(async () => {
     try {
       setLoading(true);
       const { data } = await api.get(`/eventos/${evento.id}/fotos`);
@@ -25,7 +21,11 @@ export const GerenciarFotosModal = ({ evento, onClose }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [evento.id]);
+
+  useEffect(() => {
+    carregarFotos();
+  }, [carregarFotos]);
 
   const handleAdicionarFoto = async (e) => {
     e.preventDefault();

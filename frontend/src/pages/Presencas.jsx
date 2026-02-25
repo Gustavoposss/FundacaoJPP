@@ -6,8 +6,6 @@ import { Loader } from '../components/Loader';
 import { PresencaTable } from '../components/PresencaTable';
 import { PageHeader } from '../components/PageHeader';
 import { useDebounce } from '../hooks/useDebounce';
-import { cleanCPF } from '../utils/validators';
-
 export const Presencas = () => {
   const [eventos, setEventos] = useState([]);
   const [selectedEvento, setSelectedEvento] = useState('');
