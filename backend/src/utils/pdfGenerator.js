@@ -9,6 +9,7 @@ export const generatePDF = (registros, tipo, periodo = {}) => {
       const doc = new PDFDocument({
         size: 'A4',
         margins: { top: 50, bottom: 50, left: 50, right: 50 },
+        bufferPages: true,
       });
 
       const chunks = [];
@@ -61,15 +62,15 @@ export const generatePDF = (registros, tipo, periodo = {}) => {
         generateTable(doc, registros, tipo);
       }
 
-      // Rodapé
-      const totalPages = doc.bufferedPageRange().count;
-      for (let i = 0; i < totalPages; i++) {
+      // Rodapé (bufferPages: true garante que todas as páginas estejam no buffer)
+      const { start, count } = doc.bufferedPageRange();
+      for (let i = start; i < start + count; i++) {
         doc.switchToPage(i);
         doc
           .fontSize(8)
           .fillColor('#999999')
           .text(
-            `Página ${i + 1} de ${totalPages}`,
+            `Página ${i - start + 1} de ${count}`,
             doc.page.width - 100,
             doc.page.height - 30,
             { align: 'right' }
