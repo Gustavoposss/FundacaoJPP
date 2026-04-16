@@ -136,7 +136,6 @@ export const Idosos = () => {
           >
             <option value="">Todos os status</option>
             <option value="fixo">Fixos</option>
-            <option value="espera">Espera</option>
             <option value="inadimplente">Inadimplentes</option>
           </select>
         </div>
@@ -168,14 +167,12 @@ export const Idosos = () => {
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          idoso.status === 'fixo'
-                            ? 'bg-green-100 text-green-800'
-                            : idoso.status === 'espera'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
+                          idoso.status === 'inadimplente'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-green-100 text-green-800'
                         }`}
                       >
-                        {idoso.status === 'fixo' ? 'Fixos' : idoso.status === 'espera' ? 'Espera' : 'Inadimplentes'}
+                        {idoso.status === 'inadimplente' ? 'Inadimplente' : 'Fixo'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.telefone || '-'}</td>

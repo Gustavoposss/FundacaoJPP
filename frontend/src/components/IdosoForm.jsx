@@ -7,7 +7,7 @@ const fields = [
   { name: 'sexo', label: 'Sexo', type: 'select', options: ['Masculino', 'Feminino', 'Outro'], required: true, cols: 3 },
   { name: 'naturalidade', label: 'Naturalidade', type: 'text', required: true, cols: 3 },
   { name: 'telefone', label: 'Telefone', type: 'text', required: true, cols: 3 },
-  { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'espera', 'inadimplente'], optionLabels: { 'fixo': 'Fixos', 'espera': 'Espera', 'inadimplente': 'Inadimplentes' }, required: true, cols: 3 },
+  { name: 'status', label: 'Status', type: 'select', options: ['fixo', 'inadimplente'], optionLabels: { 'fixo': 'Fixo', 'inadimplente': 'Inadimplente' }, required: true, cols: 3 },
   
   // Endereço
   { name: 'endereco', label: 'Endereço', type: 'text', required: true, cols: 6 },
@@ -40,7 +40,7 @@ const getColClass = (cols) => {
   return colMap[cols] || 'md:col-span-3';
 };
 
-export const IdosoForm = ({ values, onChange, onSubmit, loading }) => (
+export const IdosoForm = ({ values, onChange, onSubmit, loading, disableStatusChange }) => (
   <form onSubmit={onSubmit}>
     <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
       {fields.map((field) => (
@@ -56,6 +56,7 @@ export const IdosoForm = ({ values, onChange, onSubmit, loading }) => (
               value={values[field.name] || ''}
               onChange={onChange}
               required={field.required}
+              disabled={field.name === 'status' && disableStatusChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
             >
               <option value="">Selecione</option>
@@ -104,8 +105,10 @@ IdosoForm.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool,
+  disableStatusChange: PropTypes.bool,
 };
 
 IdosoForm.defaultProps = {
   loading: false,
+  disableStatusChange: false,
 };

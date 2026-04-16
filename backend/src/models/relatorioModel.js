@@ -159,7 +159,7 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
       i.cpf,
       i.rg,
       i.data_cadastro,
-      ${hasStatusColumn ? 'i.status,' : "'fixo' as status,"}
+      ${hasStatusColumn ? "CASE WHEN i.status = 'espera' THEN 'fixo' ELSE i.status END AS status," : "'fixo' as status,"}
       COUNT(DISTINCT p.id_evento) FILTER (WHERE p.presente = true) AS total_presencas
     FROM idosos i
     LEFT JOIN presencas p ON p.id_idoso = i.id
@@ -211,9 +211,15 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
   }
 
   if (status && hasStatusColumn) {
-    query += ` AND i.status = $${paramIndex}`;
-    params.push(status);
-    paramIndex++;
+    const normalizedStatus = status === 'espera' ? 'fixo' : status;
+
+    if (normalizedStatus === 'fixo') {
+      query += " AND i.status IN ('fixo', 'espera')";
+    } else {
+      query += ` AND i.status = $${paramIndex}`;
+      params.push(normalizedStatus);
+      paramIndex++;
+    }
   }
 
   query += ' GROUP BY i.id';

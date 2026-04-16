@@ -338,7 +338,6 @@ export const Relatorios = () => {
                     >
                       <option value="">Todos</option>
                       <option value="fixo">Fixos</option>
-                      <option value="espera">Espera</option>
                       <option value="inadimplente">Inadimplentes</option>
                     </select>
                   </div>

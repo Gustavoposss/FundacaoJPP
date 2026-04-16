@@ -3,11 +3,13 @@ import db from '../services/db.js';
 const CAMPOS_SELECT = `
   id, nome_completo, data_nascimento, sexo, telefone, endereco, numero, bairro, 
   cidade, cep, rg, naturalidade, orgao_expedidor, cpf, titulo_eleitoral, zona_eleitoral, 
-  secao_eleitoral, municipio_uf, data_inscricao, data_cadastro, status
+  secao_eleitoral, municipio_uf, data_inscricao, data_cadastro,
+  CASE WHEN status = 'espera' THEN 'fixo' ELSE status END AS status
 `;
 
 const CAMPOS_SELECT_LISTA = `
-  id, nome_completo, data_nascimento, sexo, telefone, cpf, data_cadastro, status
+  id, nome_completo, data_nascimento, sexo, telefone, cpf, data_cadastro,
+  CASE WHEN status = 'espera' THEN 'fixo' ELSE status END AS status
 `;
 
 export const listarIdosos = async ({ search, status }) => {
@@ -21,8 +23,14 @@ export const listarIdosos = async ({ search, status }) => {
   }
 
   if (status) {
-    conditions.push(`status = $${params.length + 1}`);
-    params.push(status);
+    const normalizedStatus = status === 'espera' ? 'fixo' : status;
+
+    if (normalizedStatus === 'fixo') {
+      conditions.push(`status IN ('fixo', 'espera')`);
+    } else {
+      conditions.push(`status = $${params.length + 1}`);
+      params.push(normalizedStatus);
+    }
   }
 
   if (conditions.length > 0) {
@@ -61,7 +69,6 @@ export const criarIdoso = async (dados) => {
     secao_eleitoral,
     municipio_uf,
     data_inscricao,
-    status = 'fixo',
   } = dados;
 
   const query = `
@@ -93,7 +100,7 @@ export const criarIdoso = async (dados) => {
     secao_eleitoral,
     municipio_uf,
     data_inscricao || null,
-    status,
+    'fixo',
   ]);
 
   return rows[0];
@@ -147,6 +154,8 @@ export const atualizarIdoso = async (id, dados) => {
     RETURNING *
   `;
 
+  const normalizedStatus = status === 'espera' ? 'fixo' : status || 'fixo';
+
   const { rows } = await db.query(query, [
     nome_completo,
     data_nascimento || null,
@@ -166,7 +175,7 @@ export const atualizarIdoso = async (id, dados) => {
     secao_eleitoral,
     municipio_uf,
     data_inscricao || null,
-    status || 'fixo',
+    normalizedStatus,
     id,
   ]);
 

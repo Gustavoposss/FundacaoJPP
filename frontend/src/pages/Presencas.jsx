@@ -177,7 +177,6 @@ export const Presencas = () => {
               >
                 <option value="">Todos os status</option>
                 <option value="fixo">Fixos</option>
-                <option value="espera">Espera</option>
                 <option value="inadimplente">Inadimplentes</option>
               </select>
             </div>

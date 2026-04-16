@@ -13,11 +13,15 @@ import {
  */
 export const validateIdoso = (req, res, next) => {
   const requiredFields = [
-    'nome_completo', 'data_nascimento', 'sexo', 'naturalidade', 'telefone', 'status',
+    'nome_completo', 'data_nascimento', 'sexo', 'naturalidade', 'telefone',
     'endereco', 'numero', 'bairro', 'cidade', 'cep',
     'cpf', 'rg', 'orgao_expedidor', 'titulo_eleitoral', 'zona_eleitoral', 'secao_eleitoral', 'municipio_uf',
     'data_inscricao'
   ];
+
+  if (req.method === 'PUT' || req.method === 'PATCH') {
+    requiredFields.push('status');
+  }
   const missing = validateRequired(req.body, requiredFields);
 
   if (missing) {
@@ -30,6 +34,10 @@ export const validateIdoso = (req, res, next) => {
 
   // Sanitizar dados
   req.body = sanitizeObject(req.body);
+
+  if (req.body.status === 'espera') {
+    req.body.status = 'fixo';
+  }
 
   // Validar nome
   if (req.body.nome_completo.length < 3) {
@@ -53,8 +61,8 @@ export const validateIdoso = (req, res, next) => {
   }
 
   // Validar status (se fornecido)
-  if (req.body.status && !['fixo', 'espera', 'inadimplente'].includes(req.body.status)) {
-    return errorResponse(res, 'Status inválido (deve ser "fixo", "espera" ou "inadimplente")', 400);
+  if (req.body.status && !['fixo', 'inadimplente'].includes(req.body.status)) {
+    return errorResponse(res, 'Status inválido (deve ser "fixo" ou "inadimplente")', 400);
   }
 
   next();

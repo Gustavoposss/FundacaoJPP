@@ -10,7 +10,10 @@ import { successResponse, errorResponse } from '../utils/responseHelper.js';
 export const obterIdosos = async (req, res) => {
   try {
     const { search, status } = req.query;
-    const idosos = await listarIdosos({ search, status });
+    const idosos = await listarIdosos({
+      search,
+      status: status === 'espera' ? 'fixo' : status,
+    });
     return successResponse(res, { idosos });
   } catch (error) {
     console.error('Erro ao listar idosos:', error);

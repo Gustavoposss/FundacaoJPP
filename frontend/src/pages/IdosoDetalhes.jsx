@@ -95,7 +95,7 @@ export const IdosoDetalhes = () => {
     { label: 'Sexo', value: idoso.sexo },
     { label: 'Naturalidade', value: idoso.naturalidade },
     { label: 'Telefone', value: idoso.telefone },
-    { label: 'Status', value: idoso.status === 'fixo' ? 'Fixos' : idoso.status === 'espera' ? 'Espera' : 'Inadimplentes' },
+    { label: 'Status', value: idoso.status === 'inadimplente' ? 'Inadimplente' : 'Fixo' },
     { label: 'Endereço', value: idoso.endereco },
     { label: 'Nº', value: idoso.numero },
     { label: 'Bairro', value: idoso.bairro },

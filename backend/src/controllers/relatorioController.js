@@ -10,6 +10,8 @@ const cleanCPF = (cpf) => {
   return String(cpf).replace(/\D/g, '');
 };
 
+const getStatusLabel = (status) => (status === 'inadimplente' ? 'Inadimplentes' : 'Fixos');
+
 /**
  * Gera relatório baseado no tipo solicitado
  */
@@ -80,7 +82,7 @@ export const gerarRelatorio = async (req, res) => {
         registros = registros.map((r) => ({
           id: r.id,
           titulo: r.nome_completo,
-          descricao: `Idade: ${r.idade} anos | Sexo: ${r.sexo} | Status: ${r.status === 'fixo' ? 'Fixos' : r.status === 'espera' ? 'Espera' : 'Inadimplentes'} | Telefone: ${r.telefone || 'N/A'}`,
+          descricao: `Idade: ${r.idade} anos | Sexo: ${r.sexo} | Status: ${getStatusLabel(r.status)} | Telefone: ${r.telefone || 'N/A'}`,
           data: r.data_cadastro,
           nome: r.nome_completo,
           idade: r.idade,
@@ -176,7 +178,7 @@ export const exportarRelatorio = async (req, res) => {
           r.nome_completo,
           r.idade,
           r.sexo,
-          r.status === 'fixo' ? 'Fixos' : r.status === 'espera' ? 'Espera' : 'Inadimplentes',
+          getStatusLabel(r.status),
           cleanCPF(r.cpf),
           r.telefone || 'N/A',
           Number(r.total_presencas) || 0,

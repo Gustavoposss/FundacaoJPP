@@ -116,6 +116,7 @@ export const IdosoCadastro = () => {
       const dataToSend = {
         ...values,
         cpf: values.cpf.replace(/\D/g, ''),
+        status: isEdit ? values.status : 'fixo',
       };
 
       if (isEdit) {
@@ -156,7 +157,13 @@ export const IdosoCadastro = () => {
         ]}
       />
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <IdosoForm values={values} onChange={handleChange} onSubmit={handleSubmit} loading={saving} />
+        <IdosoForm
+          values={values}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          loading={saving}
+          disableStatusChange={!isEdit}
+        />
       </div>
     </div>
   );
