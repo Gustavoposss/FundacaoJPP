@@ -136,24 +136,38 @@ export const buscarEventos = async ({ inicio, fim, nome, local, ordenar = 'data_
 export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, idade_max, status, ordenar = 'nome_asc' }) => {
   // Verificar se a coluna status existe
   let hasStatusColumn = false;
+  let hasIdadeColumn = false;
+  let hasDataNascimentoColumn = false;
   try {
     const checkQuery = `
       SELECT column_name 
       FROM information_schema.columns 
-      WHERE table_name = 'idosos' AND column_name = 'status'
+      WHERE table_name = 'idosos'
+      AND column_name IN ('status', 'idade', 'data_nascimento')
     `;
     const { rows } = await db.query(checkQuery);
-    hasStatusColumn = rows.length > 0;
+    const columns = new Set(rows.map((row) => row.column_name));
+    hasStatusColumn = columns.has('status');
+    hasIdadeColumn = columns.has('idade');
+    hasDataNascimentoColumn = columns.has('data_nascimento');
   } catch (error) {
-    console.error('Erro ao verificar coluna status:', error);
+    console.error('Erro ao verificar colunas da tabela idosos:', error);
     hasStatusColumn = false;
+    hasIdadeColumn = false;
+    hasDataNascimentoColumn = false;
   }
+
+  const idadeExpression = hasIdadeColumn
+    ? 'i.idade'
+    : hasDataNascimentoColumn
+    ? "EXTRACT(YEAR FROM AGE(CURRENT_DATE, i.data_nascimento))::int"
+    : '0';
 
   let query = `
     SELECT 
       i.id,
       i.nome_completo,
-      i.idade,
+      ${idadeExpression} AS idade,
       i.sexo,
       i.telefone,
       i.cpf,
@@ -199,13 +213,13 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
   }
 
   if (idade_min) {
-    query += ` AND i.idade >= $${paramIndex}`;
+    query += ` AND ${idadeExpression} >= $${paramIndex}`;
     params.push(Number(idade_min));
     paramIndex++;
   }
 
   if (idade_max) {
-    query += ` AND i.idade <= $${paramIndex}`;
+    query += ` AND ${idadeExpression} <= $${paramIndex}`;
     params.push(Number(idade_max));
     paramIndex++;
   }
@@ -228,8 +242,8 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
   const orderBy = {
     nome_asc: 'i.nome_completo ASC',
     nome_desc: 'i.nome_completo DESC',
-    idade_asc: 'i.idade ASC',
-    idade_desc: 'i.idade DESC',
+    idade_asc: `${idadeExpression} ASC`,
+    idade_desc: `${idadeExpression} DESC`,
     cadastro_desc: 'i.data_cadastro DESC',
     cadastro_asc: 'i.data_cadastro ASC',
     presencas_desc: 'total_presencas DESC',
