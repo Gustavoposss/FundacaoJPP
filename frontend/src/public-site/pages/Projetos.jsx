@@ -46,7 +46,14 @@ export const Projetos = () => {
           })
         );
         
-        setEventos(eventosComFotos);
+        // Garante ordenação por data (mais recente primeiro), com datas nulas ao final
+        const eventosOrdenados = [...eventosComFotos].sort((a, b) => {
+          if (!a.data_evento) return 1;
+          if (!b.data_evento) return -1;
+          return new Date(b.data_evento) - new Date(a.data_evento);
+        });
+
+        setEventos(eventosOrdenados);
       } catch (error) {
         console.error('Erro ao carregar eventos:', error);
         toast.error('Não foi possível carregar os eventos.');
