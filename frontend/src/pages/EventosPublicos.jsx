@@ -8,6 +8,7 @@ import { PageHeader } from '../components/PageHeader';
 import { EventoPublicoForm } from '../components/EventoPublicoForm';
 import { GerenciarFotosModal } from '../components/GerenciarFotosModal';
 import { converterUrlYouTubeParaEmbed } from '../utils/youtubeUtils';
+import { formatarDataBR } from '../utils/dateUtils';
 
 const emptyEvento = { 
   nome: '', 
@@ -181,7 +182,7 @@ export const EventosPublicos = () => {
                   <tr key={evento.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 text-sm font-medium text-gray-900">{evento.nome}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      {evento.data_evento ? new Date(evento.data_evento).toLocaleDateString('pt-BR') : '-'}
+                      {evento.data_evento ? formatarDataBR(evento.data_evento) : '-'}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{evento.local || '-'}</td>
                     <td className="px-4 py-3 text-sm">

@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
 import { api } from '../../services/api';
 import { converterUrlYouTubeParaEmbed } from '../../utils/youtubeUtils';
+import { formatarMesAnoEvento } from '../../utils/dateUtils';
 import { usePageMeta } from '../hooks/usePageMeta';
 
 export const Projetos = () => {
@@ -66,19 +67,8 @@ export const Projetos = () => {
     carregarEventos();
   }, []);
 
-  // Formatar data para exibir mês/ano
-  const formatarDataEvento = (dataEvento) => {
-    if (!dataEvento) return { mes: '', ano: '' };
-    const date = new Date(dataEvento);
-    const meses = [
-      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-    ];
-    return {
-      mes: meses[date.getMonth()],
-      ano: date.getFullYear().toString()
-    };
-  };
+  // Formatar data para exibir mês/ano (sem deslocamento de fuso horário)
+  const formatarDataEvento = (dataEvento) => formatarMesAnoEvento(dataEvento);
 
   // Buscar evento completo com fotos quando abrir modal
   const openModal = async (evento) => {
