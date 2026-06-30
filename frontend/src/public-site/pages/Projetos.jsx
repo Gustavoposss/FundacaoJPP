@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { PublicLayout } from '../../components/public/PublicLayout';
 import { api } from '../../services/api';
-import { converterUrlYouTubeParaEmbed } from '../../utils/youtubeUtils';
+import { converterUrlYouTubeParaEmbed, obterThumbnailYouTube } from '../../utils/youtubeUtils';
 import { formatarMesAnoEvento } from '../../utils/dateUtils';
 import { usePageMeta } from '../hooks/usePageMeta';
 
@@ -24,31 +24,9 @@ export const Projetos = () => {
         setLoading(true);
         const { data } = await api.get('/eventos/public');
         const eventosList = data.data?.eventos || [];
-        
-        // Carregar primeira foto de cada evento para usar como capa
-        const eventosComFotos = await Promise.all(
-          eventosList.map(async (evento) => {
-            try {
-              const fotosData = await api.get(`/eventos/public/${evento.id}/fotos`);
-              const fotos = fotosData.data?.data?.fotos || [];
-              return {
-                ...evento,
-                primeiraFoto: fotos.length > 0 ? fotos[0].foto_url : null,
-                totalFotos: fotos.length
-              };
-            } catch (error) {
-              // Se falhar ao carregar fotos, continua sem foto
-              return {
-                ...evento,
-                primeiraFoto: null,
-                totalFotos: 0
-              };
-            }
-          })
-        );
-        
+
         // Garante ordenação por data (mais recente primeiro), com datas nulas ao final
-        const eventosOrdenados = [...eventosComFotos].sort((a, b) => {
+        const eventosOrdenados = [...eventosList].sort((a, b) => {
           if (!a.data_evento) return 1;
           if (!b.data_evento) return -1;
           return new Date(b.data_evento) - new Date(a.data_evento);
@@ -70,25 +48,16 @@ export const Projetos = () => {
   // Formatar data para exibir mês/ano (sem deslocamento de fuso horário)
   const formatarDataEvento = (dataEvento) => formatarMesAnoEvento(dataEvento);
 
-  // Buscar evento completo com fotos quando abrir modal
+  // Abrir modal com o vídeo do evento
   const openModal = async (evento) => {
     try {
       const { data } = await api.get(`/eventos/public/${evento.id}`);
       const eventoCompleto = data.data?.evento || evento;
-      
-      // Formatar fotos para o formato esperado pelo componente
-      const fotosFormatadas = eventoCompleto.fotos?.map(foto => ({
-        id: foto.id,
-        url: foto.foto_url,
-        alt: foto.alt_text || `Foto do evento ${eventoCompleto.nome}`
-      })) || [];
-      
-      // Converter URL do YouTube para formato de embed se necessário
+
       const videoUrlEmbed = converterUrlYouTubeParaEmbed(eventoCompleto.video_url);
-      
+
       setSelectedEvent({
         ...eventoCompleto,
-        fotos: fotosFormatadas,
         videoUrl: videoUrlEmbed,
         ...formatarDataEvento(eventoCompleto.data_evento)
       });
@@ -97,8 +66,8 @@ export const Projetos = () => {
       // Usa dados básicos se falhar
       setSelectedEvent({
         ...evento,
-        ...formatarDataEvento(evento.data_evento),
-        fotos: []
+        videoUrl: converterUrlYouTubeParaEmbed(evento.video_url),
+        ...formatarDataEvento(evento.data_evento)
       });
     }
   };
@@ -149,18 +118,19 @@ export const Projetos = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {eventos.map((evento) => {
               const { mes, ano } = formatarDataEvento(evento.data_evento);
-              
+              const thumbnail = obterThumbnailYouTube(evento.video_url);
+
               return (
                 <div
                   key={evento.id}
                   className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 group"
                   onClick={() => openModal(evento)}
                 >
-                  {/* Imagem de capa do evento */}
+                  {/* Capa do evento (thumbnail do vídeo) */}
                   <div className="relative h-64 bg-gradient-to-br from-fjpp-blue-DEFAULT to-fjpp-blue-700 overflow-hidden">
-                    {evento.primeiraFoto ? (
+                    {thumbnail ? (
                       <img
-                        src={evento.primeiraFoto}
+                        src={thumbnail}
                         alt={evento.nome}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         onError={(e) => {
@@ -170,27 +140,26 @@ export const Projetos = () => {
                     ) : null}
                     {/* Overlay gradiente */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                    
+
+                    {/* Ícone de play (indica vídeo) */}
+                    {evento.video_url && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="flex items-center justify-center w-16 h-16 rounded-full bg-white/90 text-fjpp-blue-DEFAULT shadow-lg group-hover:scale-110 transition-transform">
+                          <svg className="w-7 h-7 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </span>
+                      </div>
+                    )}
+
                     {/* Badge de data */}
                     <div className="absolute bottom-4 left-4">
                       <span className="inline-block px-4 py-2 bg-white/95 backdrop-blur-sm text-fjpp-blue-DEFAULT text-sm font-bold rounded-full shadow-lg">
                         {mes} {ano}
                       </span>
                     </div>
-
-                    {/* Badge de quantidade de fotos */}
-                    {evento.totalFotos > 0 && (
-                      <div className="absolute top-4 right-4">
-                        <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          {evento.totalFotos}
-                        </span>
-                      </div>
-                    )}
                   </div>
-                  
+
                   {/* Informações do evento */}
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-fjpp-blue-DEFAULT mb-2 group-hover:text-fjpp-green-DEFAULT transition-colors">
@@ -204,7 +173,7 @@ export const Projetos = () => {
                         Clique para ver mais
                       </span>
                       <span className="text-fjpp-green-DEFAULT font-semibold flex items-center text-sm group-hover:gap-2 transition-all">
-                        Ver galeria
+                        Ver vídeo
                         <svg
                           className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
                           fill="none"
@@ -268,65 +237,19 @@ export const Projetos = () => {
 
             {/* Conteúdo do Modal */}
             <div className="overflow-y-auto p-6 flex-1">
-              {/* Vídeo do YouTube (se existir) */}
-              {selectedEvent.videoUrl && (
-                <div className="mb-8">
-                  <h3 className="text-xl font-bold text-fjpp-blue-DEFAULT mb-4">
-                    Vídeo do Evento
-                  </h3>
-                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                    <iframe
-                      className="absolute top-0 left-0 w-full h-full rounded-lg"
-                      src={selectedEvent.videoUrl}
-                      title={`Vídeo - ${selectedEvent.nome}`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </div>
-              )}
-
-              {/* Grid de Fotos */}
-              {selectedEvent.fotos && selectedEvent.fotos.length > 0 ? (
-                <div>
-                  <h3 className="text-xl font-bold text-fjpp-blue-DEFAULT mb-4">
-                    Galeria de Fotos ({selectedEvent.fotos.length} {selectedEvent.fotos.length === 1 ? 'foto' : 'fotos'})
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {selectedEvent.fotos.map((foto) => (
-                      <div
-                        key={foto.id}
-                        className="relative group cursor-pointer overflow-hidden rounded-lg"
-                      >
-                        <img
-                          src={foto.url}
-                          alt={foto.alt}
-                          className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                          onError={(e) => {
-                            // Placeholder quando a imagem não carrega
-                            e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23e5e7eb' width='400' height='300'/%3E%3Ctext fill='%239ca3af' font-family='sans-serif' font-size='18' dy='10.5' font-weight='bold' x='50%25' y='50%25' text-anchor='middle'%3EFoto em breve%3C/text%3E%3C/svg%3E`;
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                          <svg
-                            className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                            fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                          </svg>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+              {selectedEvent.videoUrl ? (
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    src={selectedEvent.videoUrl}
+                    title={`Vídeo - ${selectedEvent.nome}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-gray-500">Nenhuma foto disponível para este evento.</p>
+                  <p className="text-gray-500">Nenhum vídeo disponível para este evento.</p>
                 </div>
               )}
             </div>

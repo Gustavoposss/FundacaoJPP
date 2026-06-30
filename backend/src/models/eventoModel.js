@@ -89,8 +89,8 @@ export const listarEventosPublicos = async () => {
   return rows;
 };
 
-export const buscarEventoPublicoComFotos = async (id) => {
-  const eventoQuery = `
+export const buscarEventoPublico = async (id) => {
+  const query = `
     SELECT 
       id, 
       nome, 
@@ -102,54 +102,7 @@ export const buscarEventoPublicoComFotos = async (id) => {
     FROM eventos
     WHERE id = $1 AND exibir_publico = TRUE
   `;
-  
-  const fotosQuery = `
-    SELECT id, foto_url, alt_text, ordem_exibicao
-    FROM evento_fotos
-    WHERE evento_id = $1
-    ORDER BY ordem_exibicao ASC, id ASC
-  `;
-  
-  const [eventoResult, fotosResult] = await Promise.all([
-    db.query(eventoQuery, [id]),
-    db.query(fotosQuery, [id])
-  ]);
-  
-  if (eventoResult.rows.length === 0) {
-    return null;
-  }
-  
-  return {
-    ...eventoResult.rows[0],
-    fotos: fotosResult.rows
-  };
-};
-
-// Funções para gerenciar fotos dos eventos
-export const listarFotosEvento = async (eventoId) => {
-  const query = `
-    SELECT id, foto_url, alt_text, ordem_exibicao
-    FROM evento_fotos
-    WHERE evento_id = $1
-    ORDER BY ordem_exibicao ASC, id ASC
-  `;
-  const { rows } = await db.query(query, [eventoId]);
-  return rows;
-};
-
-export const adicionarFotoEvento = async (eventoId, { foto_url, alt_text, ordem_exibicao = 0 }) => {
-  const query = `
-    INSERT INTO evento_fotos (evento_id, foto_url, alt_text, ordem_exibicao)
-    VALUES ($1, $2, $3, $4)
-    RETURNING *
-  `;
-  const { rows } = await db.query(query, [eventoId, foto_url, alt_text || '', ordem_exibicao]);
-  return rows[0];
-};
-
-export const removerFotoEvento = async (fotoId) => {
-  const query = 'DELETE FROM evento_fotos WHERE id = $1 RETURNING *';
-  const { rows } = await db.query(query, [fotoId]);
-  return rows[0];
+  const { rows } = await db.query(query, [id]);
+  return rows[0] || null;
 };
 

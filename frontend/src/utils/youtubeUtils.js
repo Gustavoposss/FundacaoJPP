@@ -64,3 +64,37 @@ export const converterUrlYouTubeParaEmbed = (url) => {
   return embedUrl;
 };
 
+/**
+ * Extrai o ID do vídeo de uma URL do YouTube (embed, watch ou youtu.be).
+ *
+ * @param {string} url
+ * @returns {string|null}
+ */
+export const extrairIdYouTube = (url) => {
+  if (!url || typeof url !== 'string') return null;
+
+  const padroes = [
+    /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+    /youtu\.be\/([a-zA-Z0-9_-]+)/,
+  ];
+
+  for (const padrao of padroes) {
+    const match = url.match(padrao);
+    if (match) return match[1];
+  }
+
+  return null;
+};
+
+/**
+ * Retorna a URL da thumbnail do vídeo do YouTube a partir de qualquer formato de URL.
+ *
+ * @param {string} url
+ * @returns {string|null}
+ */
+export const obterThumbnailYouTube = (url) => {
+  const videoId = extrairIdYouTube(url);
+  return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+};
+

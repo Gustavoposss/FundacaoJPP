@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { Plus, Pencil, Trash, X, Image as ImageIcon } from 'react-bootstrap-icons';
+import { Plus, Pencil, Trash, X } from 'react-bootstrap-icons';
 import { api } from '../services/api';
 import { Loader } from '../components/Loader';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { PageHeader } from '../components/PageHeader';
 import { EventoPublicoForm } from '../components/EventoPublicoForm';
-import { GerenciarFotosModal } from '../components/GerenciarFotosModal';
 import { converterUrlYouTubeParaEmbed } from '../utils/youtubeUtils';
 import { formatarDataBR } from '../utils/dateUtils';
 
@@ -24,9 +23,7 @@ export const EventosPublicos = () => {
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [showFotosModal, setShowFotosModal] = useState(false);
   const [current, setCurrent] = useState(emptyEvento);
-  const [eventoSelecionado, setEventoSelecionado] = useState(null);
   const [saving, setSaving] = useState(false);
   const [removing, setRemoving] = useState(null);
 
@@ -116,11 +113,6 @@ export const EventosPublicos = () => {
     }
   };
 
-  const handleGerenciarFotos = (evento) => {
-    setEventoSelecionado(evento);
-    setShowFotosModal(true);
-  };
-
   if (loading) {
     return <Loader />;
   }
@@ -198,14 +190,6 @@ export const EventosPublicos = () => {
                     </td>
                     <td className="px-4 py-3 text-sm">
                       <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleGerenciarFotos(evento)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="Gerenciar Fotos"
-                        >
-                          <ImageIcon size={18} />
-                        </button>
                         <button
                           type="button"
                           onClick={() => {
@@ -296,18 +280,6 @@ export const EventosPublicos = () => {
             </div>
           </div>
         </div>
-      )}
-
-      {/* Modal de Fotos */}
-      {showFotosModal && eventoSelecionado && (
-        <GerenciarFotosModal
-          evento={eventoSelecionado}
-          onClose={() => {
-            setShowFotosModal(false);
-            setEventoSelecionado(null);
-            loadEventos();
-          }}
-        />
       )}
 
       <ConfirmModal
