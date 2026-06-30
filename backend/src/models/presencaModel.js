@@ -60,6 +60,46 @@ export const registrarAtualizarPresenca = async ({ eventoId, idosoId, presente }
   return rows[0];
 };
 
+// Registra/atualiza várias presenças em uma única query (muito mais rápido que
+// fazer um INSERT por idoso em sequência).
+export const registrarPresencasEmLote = async (eventoId, presencas) => {
+  if (!Array.isArray(presencas) || presencas.length === 0) {
+    return [];
+  }
+
+  // Remove duplicatas pelo idosoId (o ON CONFLICT não pode afetar a mesma linha
+  // duas vezes na mesma instrução). Mantém o último valor enviado.
+  const presencasPorIdoso = new Map();
+  for (const presenca of presencas) {
+    if (presenca?.idosoId === undefined || presenca?.idosoId === null) continue;
+    presencasPorIdoso.set(presenca.idosoId, Boolean(presenca.presente));
+  }
+
+  const presencasUnicas = [...presencasPorIdoso.entries()];
+  if (presencasUnicas.length === 0) {
+    return [];
+  }
+
+  const params = [eventoId];
+  const valores = presencasUnicas.map(([idosoId, presente], index) => {
+    const idosoParam = index * 2 + 2;
+    const presenteParam = index * 2 + 3;
+    params.push(idosoId, presente);
+    return `($1, $${idosoParam}, $${presenteParam})`;
+  });
+
+  const query = `
+    INSERT INTO presencas (id_evento, id_idoso, presente)
+    VALUES ${valores.join(', ')}
+    ON CONFLICT (id_evento, id_idoso)
+    DO UPDATE SET presente = EXCLUDED.presente, data_registro = CURRENT_TIMESTAMP
+    RETURNING *
+  `;
+
+  const { rows } = await db.query(query, params);
+  return rows;
+};
+
 export const removerPresencasPorEvento = async (eventoId) => {
   const query = 'DELETE FROM presencas WHERE id_evento = $1';
   await db.query(query, [eventoId]);

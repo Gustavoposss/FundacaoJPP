@@ -1,7 +1,7 @@
 import {
   listarPresencasPorEvento,
   listarIdososComStatus,
-  registrarAtualizarPresenca,
+  registrarPresencasEmLote,
 } from '../models/presencaModel.js';
 import { errorResponse, successResponse } from '../utils/responseHelper.js';
 
@@ -36,13 +36,7 @@ export const registrarPresencas = async (req, res) => {
       return errorResponse(res, 'Formato de presenças inválido', 400);
     }
 
-    const resultados = [];
-
-    for (const presenca of presencas) {
-      const { idosoId, presente } = presenca;
-      const resultado = await registrarAtualizarPresenca({ eventoId, idosoId, presente });
-      resultados.push(resultado);
-    }
+    const resultados = await registrarPresencasEmLote(eventoId, presencas);
 
     return successResponse(res, { presencas: resultados }, 'Presenças registradas com sucesso');
   } catch (error) {
