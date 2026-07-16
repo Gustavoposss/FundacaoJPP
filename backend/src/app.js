@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
-import authRoutes from './routes/authRoutes.js';
 import idosoRoutes from './routes/idosoRoutes.js';
 import eventoRoutes from './routes/eventoRoutes.js';
 import presencaRoutes from './routes/presencaRoutes.js';
@@ -37,7 +36,6 @@ app.use(express.urlencoded({ extended: true }));
 const uploadsPath = path.resolve('src/uploads');
 app.use('/uploads', express.static(uploadsPath));
 
-app.use('/api/auth', authRoutes);
 app.use('/api/idosos', idosoRoutes);
 app.use('/api/eventos', eventoRoutes);
 app.use('/api/presencas', presencaRoutes);

@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
 import { errorResponse } from '../utils/responseHelper.js';
+import { getSupabaseUser } from '../services/supabaseAuth.js';
 
-export const authRequired = (req, res, next) => {
+export const authRequired = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith('Bearer ')) {
@@ -10,12 +10,17 @@ export const authRequired = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.usuario = decoded;
-    return next();
-  } catch (error) {
+  const user = await getSupabaseUser(token);
+
+  if (!user) {
     return errorResponse(res, 'Token inválido ou expirado', 401);
   }
-};
 
+  req.usuario = {
+    id: user.id,
+    email: user.email,
+    ...user.user_metadata,
+  };
+
+  return next();
+};

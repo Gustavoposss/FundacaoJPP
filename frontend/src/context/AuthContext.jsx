@@ -1,89 +1,95 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { api } from '../services/api';
+import { supabase } from '../services/supabaseClient';
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  const [usuario, setUsuario] = useState(() => {
-    const stored = localStorage.getItem('fjpp_usuario');
-    return stored ? JSON.parse(stored) : null;
-  });
-  const [token, setToken] = useState(() => localStorage.getItem('fjpp_token') || '');
-  const [loading, setLoading] = useState(false);
+const mapUsuario = (user) => {
+  if (!user) return null;
+  return {
+    id: user.id,
+    email: user.email,
+    nome: user.user_metadata?.nome || user.user_metadata?.full_name || user.email,
+    ...user.user_metadata,
+  };
+};
 
-  // Carregar token do localStorage ao montar o componente
+export const AuthProvider = ({ children }) => {
+  const [usuario, setUsuario] = useState(null);
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+
   useEffect(() => {
-    const storedToken = localStorage.getItem('fjpp_token');
-    const storedUsuario = localStorage.getItem('fjpp_usuario');
-    
-    if (storedToken && storedUsuario) {
-      try {
-        const parsedUsuario = JSON.parse(storedUsuario);
-        setToken(storedToken);
-        setUsuario(parsedUsuario);
-        api.defaults.headers.common.Authorization = `Bearer ${storedToken}`;
-      } catch (e) {
-        console.error('Erro ao parsear usuário do localStorage:', e);
-        localStorage.removeItem('fjpp_token');
-        localStorage.removeItem('fjpp_usuario');
-        setUsuario(null);
-        setToken('');
-      }
-    } else if (!storedToken) {
-      setUsuario(null);
-      setToken('');
-    }
-  }, []); // Executar apenas uma vez ao montar
-  
-  // Atualizar header quando token mudar
-  useEffect(() => {
-    if (token) {
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
-    } else {
-      delete api.defaults.headers.common.Authorization;
-    }
-  }, [token]);
+    let ativo = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!ativo) return;
+      setSession(data.session);
+      setUsuario(mapUsuario(data.session?.user));
+      setInitializing(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, novaSessao) => {
+      setSession(novaSessao);
+      setUsuario(mapUsuario(novaSessao?.user));
+    });
+
+    return () => {
+      ativo = false;
+      listener?.subscription?.unsubscribe();
+    };
+  }, []);
 
   const login = async (email, senha) => {
     setLoading(true);
     try {
-      const { data } = await api.post('/auth/login', { email, senha });
-      setToken(data.data.token);
-      setUsuario(data.data.usuario);
-      localStorage.setItem('fjpp_token', data.data.token);
-      localStorage.setItem('fjpp_usuario', JSON.stringify(data.data.usuario));
-      api.defaults.headers.common.Authorization = `Bearer ${data.data.token}`;
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password: senha,
+      });
+
+      if (error) {
+        return {
+          success: false,
+          message:
+            error.message === 'Invalid login credentials'
+              ? 'Credenciais inválidas'
+              : error.message,
+        };
+      }
+
+      setSession(data.session);
+      setUsuario(mapUsuario(data.user));
       return { success: true };
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Credenciais inválidas',
+        message: error.message || 'Não foi possível entrar. Tente novamente.',
       };
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
     setUsuario(null);
-    setToken('');
-    delete api.defaults.headers.common.Authorization;
-    localStorage.removeItem('fjpp_token');
-    localStorage.removeItem('fjpp_usuario');
   };
 
   const value = useMemo(
     () => ({
       usuario,
-      token,
+      token: session?.access_token || '',
       loading,
+      initializing,
       login,
       logout,
-      isAuthenticated: Boolean(usuario && token),
+      isAuthenticated: Boolean(session),
       setUsuario,
     }),
-    [usuario, token, loading]
+    [usuario, session, loading, initializing]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -100,4 +106,3 @@ export const useAuthContext = () => {
   }
   return context;
 };
-

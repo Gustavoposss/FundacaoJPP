@@ -1,6 +1,5 @@
 import { errorResponse } from '../utils/responseHelper.js';
 import {
-  isValidEmail,
   isValidCPF,
   isValidPhone,
   isValidAge,
@@ -100,52 +99,6 @@ export const validateEvento = (req, res, next) => {
   // Validar local
   if (req.body.local.length < 3) {
     return errorResponse(res, 'Local deve ter pelo menos 3 caracteres', 400);
-  }
-
-  next();
-};
-
-/**
- * Middleware para validar dados de login
- */
-export const validateLogin = (req, res, next) => {
-  const { email, senha } = req.body;
-
-  if (!email || !senha) {
-    return errorResponse(res, 'E-mail e senha são obrigatórios', 400);
-  }
-
-  if (!isValidEmail(email)) {
-    return errorResponse(res, 'E-mail inválido', 400);
-  }
-
-  if (senha.length < 6) {
-    return errorResponse(res, 'Senha deve ter pelo menos 6 caracteres', 400);
-  }
-
-  next();
-};
-
-/**
- * Middleware para validar dados de registro
- */
-export const validateRegistro = (req, res, next) => {
-  const { nome, email, senha } = req.body;
-
-  if (!nome || !email || !senha) {
-    return errorResponse(res, 'Nome, e-mail e senha são obrigatórios', 400);
-  }
-
-  if (nome.length < 3) {
-    return errorResponse(res, 'Nome deve ter pelo menos 3 caracteres', 400);
-  }
-
-  if (!isValidEmail(email)) {
-    return errorResponse(res, 'E-mail inválido', 400);
-  }
-
-  if (senha.length < 6) {
-    return errorResponse(res, 'Senha deve ter pelo menos 6 caracteres', 400);
   }
 
   next();
