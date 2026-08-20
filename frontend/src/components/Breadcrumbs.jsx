@@ -8,20 +8,20 @@ export const Breadcrumbs = ({ items }) => {
   }
 
   return (
-    <nav className="flex items-center gap-2 text-sm" aria-label="breadcrumb">
+    <nav className="flex items-center gap-2 text-sm mb-3" aria-label="breadcrumb">
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         return (
           <div key={item.label} className="flex items-center gap-2">
-            {index > 0 && <ChevronRight size={14} className="text-gray-400" />}
+            {index > 0 && <ChevronRight size={14} className="text-fjpp-gray-400" />}
             {isLast || !item.to ? (
-              <span className={isLast ? 'text-fjpp-blue font-semibold' : 'text-gray-600'}>
+              <span className={isLast ? 'text-fjpp-green font-semibold' : 'text-fjpp-gray-600'}>
                 {item.label}
               </span>
             ) : (
               <Link
                 to={item.to}
-                className="text-gray-600 hover:text-fjpp-blue transition-colors"
+                className="text-fjpp-gray-600 hover:text-fjpp-blue transition-colors hover:underline"
               >
                 {item.label}
               </Link>

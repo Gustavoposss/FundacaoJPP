@@ -20,13 +20,11 @@ export const PublicHeader = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-fjpp-blue to-fjpp-blue-700 flex items-center justify-center shadow-card group-hover:shadow-elevated transition-all duration-300 group-hover:scale-105">
-              <img
-                src="/logo-fundacao-jpp.svg"
-                alt="Fundação José Possidônio Peixoto"
-                className="h-10 w-10 object-contain"
-              />
-            </div>
+            <img
+              src="/logo-fundacao-jpp.svg"
+              alt="Fundação José Possidônio Peixoto"
+              className="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-110"
+            />
             <span className="text-xl font-bold text-fjpp-blue-DEFAULT group-hover:text-fjpp-blue-600 transition-colors hidden lg:inline">
               Fundação José Possidônio Peixoto
             </span>
