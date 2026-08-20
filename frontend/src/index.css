@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,6 +8,7 @@
     @apply font-sans bg-fjpp-light text-gray-900 antialiased;
     margin: 0;
     padding: 0;
+    scroll-behavior: smooth;
   }
   
   a {
@@ -17,10 +18,117 @@
   * {
     box-sizing: border-box;
   }
+  
+  /* Melhorias de scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-lg;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
 }
 
 @layer components {
   .toastify {
     @apply font-sans;
+  }
+  
+  /* Botões modernos */
+  .btn-primary {
+    @apply px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-fjpp-green to-fjpp-green-600 rounded-xl hover:from-fjpp-green-600 hover:to-fjpp-green-700 transition-all shadow-button hover:shadow-elevated transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+  }
+  
+  .btn-secondary {
+    @apply px-5 py-2.5 text-sm font-semibold text-fjpp-green bg-white border-2 border-fjpp-green rounded-xl hover:bg-fjpp-green hover:text-white transition-all shadow-soft hover:shadow-button transform hover:-translate-y-0.5;
+  }
+  
+  /* Cards modernos */
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-gray-100 p-6 hover:shadow-elevated transition-all duration-300;
+  }
+  
+  /* Inputs modernos */
+  .input-field {
+    @apply w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-all hover:border-gray-300 bg-white;
+  }
+}
+
+@layer utilities {
+  /* Animações customizadas */
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-in forwards;
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.5s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Utilities para glassmorphism */
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm;
+  }
+  
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-md;
   }
 }
