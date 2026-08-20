@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { List, PersonCircle, ChevronDown } from 'react-bootstrap-icons';
+import { List, ChevronDown } from 'react-bootstrap-icons';
 import { useAuth } from '../hooks/useAuth';
 import classNames from 'classnames';
 
