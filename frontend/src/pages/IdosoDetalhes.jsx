@@ -9,6 +9,7 @@ import { PresencaTable } from '../components/PresencaTable';
 import { PageHeader } from '../components/PageHeader';
 import classNames from 'classnames';
 import { cleanCPF } from '../utils/validators';
+import { formatarDataBR } from '../utils/dateUtils';
 
 export const IdosoDetalhes = () => {
   const { id } = useParams();
@@ -208,7 +209,7 @@ const FormSelector = ({ eventos, selectedEvento, setSelectedEvento }) => (
       <option value="">Selecione...</option>
       {eventos.map((evento) => (
         <option value={evento.id} key={evento.id}>
-          {evento.nome} - {new Date(evento.data_evento).toLocaleDateString()}
+          {evento.nome} - {formatarDataBR(evento.data_evento)}
         </option>
       ))}
     </select>

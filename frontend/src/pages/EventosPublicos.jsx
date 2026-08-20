@@ -7,7 +7,7 @@ import { ConfirmModal } from '../components/ConfirmModal';
 import { PageHeader } from '../components/PageHeader';
 import { EventoPublicoForm } from '../components/EventoPublicoForm';
 import { converterUrlYouTubeParaEmbed } from '../utils/youtubeUtils';
-import { formatarDataBR } from '../utils/dateUtils';
+import { formatarDataBR, paraInputDate } from '../utils/dateUtils';
 
 const emptyEvento = { 
   nome: '', 
@@ -48,31 +48,7 @@ export const EventosPublicos = () => {
     setSaving(true);
     try {
       // Converter URL do YouTube para formato embed antes de salvar
-      const eventoParaSalvar = { ...current };
-      
-      // Garantir que a data seja enviada no formato YYYY-MM-DD sem timezone
-      // O input type="date" já retorna YYYY-MM-DD, mas vamos garantir
-      if (eventoParaSalvar.data_evento) {
-        if (typeof eventoParaSalvar.data_evento === 'string') {
-          // Se contém 'T' (formato ISO), extrair apenas a data
-          if (eventoParaSalvar.data_evento.includes('T')) {
-            eventoParaSalvar.data_evento = eventoParaSalvar.data_evento.split('T')[0];
-          }
-          // Se já está no formato YYYY-MM-DD, manter
-          // Caso contrário, tentar converter
-          if (!eventoParaSalvar.data_evento.match(/^\d{4}-\d{2}-\d{2}$/)) {
-            const date = new Date(eventoParaSalvar.data_evento);
-            if (!isNaN(date.getTime())) {
-              // Usar componentes locais para evitar problemas de timezone
-              const year = date.getFullYear();
-              const month = String(date.getMonth() + 1).padStart(2, '0');
-              const day = String(date.getDate()).padStart(2, '0');
-              eventoParaSalvar.data_evento = `${year}-${month}-${day}`;
-            }
-          }
-        }
-      }
-      
+      const eventoParaSalvar = { ...current, data_evento: paraInputDate(current.data_evento) }; 
       if (eventoParaSalvar.video_url) {
         const urlEmbed = converterUrlYouTubeParaEmbed(eventoParaSalvar.video_url);
         if (urlEmbed) {
@@ -193,33 +169,10 @@ export const EventosPublicos = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            // Formatar data para o formato YYYY-MM-DD (sem timezone)
-                            // Se a data vier como string ISO (com T e timezone), extrair apenas YYYY-MM-DD
-                            let dataFormatada = '';
-                            if (evento.data_evento) {
-                              if (typeof evento.data_evento === 'string' && evento.data_evento.includes('T')) {
-                                // Extrair apenas a parte da data (YYYY-MM-DD)
-                                dataFormatada = evento.data_evento.split('T')[0];
-                              } else if (typeof evento.data_evento === 'string' && evento.data_evento.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                                // Já está no formato correto
-                                dataFormatada = evento.data_evento;
-                              } else {
-                                // Tentar converter usando data local para evitar problemas de timezone
-                                const date = new Date(evento.data_evento);
-                                if (!isNaN(date.getTime())) {
-                                  const year = date.getFullYear();
-                                  const month = String(date.getMonth() + 1).padStart(2, '0');
-                                  const day = String(date.getDate()).padStart(2, '0');
-                                  dataFormatada = `${year}-${month}-${day}`;
-                                }
-                              }
-                            }
-                            
-                            const eventoFormatado = {
+                            setCurrent({
                               ...evento,
-                              data_evento: dataFormatada
-                            };
-                            setCurrent(eventoFormatado);
+                              data_evento: paraInputDate(evento.data_evento),
+                            });
                             setShowModal(true);
                           }}
                           className="p-2 text-fjpp-blue hover:bg-fjpp-light rounded-lg transition-colors"

@@ -1,6 +1,7 @@
-import { buscarPresencas, buscarEventos, buscarIdosos } from '../models/relatorioModel.js';
+import { buscarPresencas, buscarEventos, buscarIdosos, buscarFaltas } from '../models/relatorioModel.js';
 import { successResponse, errorResponse } from '../utils/responseHelper.js';
 import { generatePDF } from '../utils/pdfGenerator.js';
+import { formatarDataBR } from '../utils/dateUtils.js';
 
 /**
  * Remove formatação do CPF, retornando apenas números
@@ -10,7 +11,36 @@ const cleanCPF = (cpf) => {
   return String(cpf).replace(/\D/g, '');
 };
 
+const TIPOS_RELATORIO = ['presencas', 'eventos', 'idosos', 'faltas'];
+
 const getStatusLabel = (status) => (status === 'inadimplente' ? 'Inadimplentes' : 'Fixos');
+
+const calcularFrequencia = (presencas, faltas) => {
+  const total = Number(presencas) + Number(faltas);
+  if (!total) return 0;
+  return Math.round((Number(presencas) / total) * 100);
+};
+
+const mapearFaltas = (registros) =>
+  registros.map((r) => {
+    const total_faltas = Number(r.total_faltas) || 0;
+    const total_presencas = Number(r.total_presencas) || 0;
+    const frequencia = calcularFrequencia(total_presencas, total_faltas);
+
+    return {
+      id: r.id,
+      titulo: r.nome_completo,
+      descricao: `Faltas: ${total_faltas} | Presenças: ${total_presencas} | Frequência: ${frequencia}%`,
+      nome: r.nome_completo,
+      telefone: r.telefone,
+      status: r.status,
+      cpf: r.cpf,
+      total_faltas,
+      total_presencas,
+      total_registros: Number(r.total_registros) || 0,
+      frequencia,
+    };
+  });
 
 /**
  * Gera relatório baseado no tipo solicitado
@@ -19,7 +49,7 @@ export const gerarRelatorio = async (req, res) => {
   try {
     const { tipo, inicio, fim, ...filtros } = req.query;
 
-    if (!tipo || !['presencas', 'eventos', 'idosos'].includes(tipo)) {
+    if (!tipo || !TIPOS_RELATORIO.includes(tipo)) {
       return errorResponse(res, 'Tipo de relatório inválido', 400);
     }
 
@@ -94,6 +124,18 @@ export const gerarRelatorio = async (req, res) => {
           total_presencas: Number(r.total_presencas) || 0,
         }));
         break;
+
+      case 'faltas':
+        registros = mapearFaltas(
+          await buscarFaltas({
+            inicio,
+            fim,
+            nome: filtros.nome,
+            status: filtros.status,
+            ordenar: filtros.ordenar,
+          })
+        );
+        break;
     }
 
     return successResponse(res, { registros }, 'Relatório gerado com sucesso');
@@ -110,7 +152,7 @@ export const exportarRelatorio = async (req, res) => {
   try {
     const { tipo, formato, inicio, fim, ...filtros } = req.query;
 
-    if (!tipo || !['presencas', 'eventos', 'idosos'].includes(tipo)) {
+    if (!tipo || !TIPOS_RELATORIO.includes(tipo)) {
       return errorResponse(res, 'Tipo de relatório inválido', 400);
     }
 
@@ -134,7 +176,7 @@ export const exportarRelatorio = async (req, res) => {
         });
         headers = ['Data do Evento', 'Evento', 'Local', 'Idoso', 'CPF', 'Presença'];
         rows = registros.map((r) => [
-          new Date(r.evento_data).toLocaleDateString('pt-BR'),
+          formatarDataBR(r.evento_data),
           r.evento_nome,
           r.evento_local || 'N/A',
           r.idoso_nome,
@@ -153,7 +195,7 @@ export const exportarRelatorio = async (req, res) => {
         });
         headers = ['Data', 'Evento', 'Local', 'Total Presentes', 'Total Cadastrados'];
         rows = registros.map((r) => [
-          new Date(r.data_evento).toLocaleDateString('pt-BR'),
+          formatarDataBR(r.data_evento),
           r.nome,
           r.local || 'N/A',
           Number(r.total_presentes) || 0,
@@ -183,6 +225,30 @@ export const exportarRelatorio = async (req, res) => {
           r.telefone || 'N/A',
           Number(r.total_presencas) || 0,
         ]);
+        break;
+
+      case 'faltas':
+        registros = await buscarFaltas({
+          inicio,
+          fim,
+          nome: filtros.nome,
+          status: filtros.status,
+          ordenar: filtros.ordenar,
+        });
+        headers = ['Nome', 'Status', 'Faltas', 'Presenças', 'Frequência (%)', 'Telefone', 'CPF'];
+        rows = registros.map((r) => {
+          const total_faltas = Number(r.total_faltas) || 0;
+          const total_presencas = Number(r.total_presencas) || 0;
+          return [
+            r.nome_completo,
+            getStatusLabel(r.status),
+            total_faltas,
+            total_presencas,
+            calcularFrequencia(total_presencas, total_faltas),
+            r.telefone || 'N/A',
+            cleanCPF(r.cpf),
+          ];
+        });
         break;
     }
 

@@ -8,8 +8,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { toast } from 'react-toastify';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { formatarDataBR } from '../utils/dateUtils';
 import { Plus, ClipboardCheck } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
@@ -40,9 +39,7 @@ export const Dashboard = () => {
                 return { ...card, value: '-' };
               }
 
-              const dataFormatada = format(new Date(evento.data_evento), 'dd/MM/yyyy', {
-                locale: ptBR,
-              });
+              const dataFormatada = formatarDataBR(evento.data_evento);
 
               return {
                 ...card,

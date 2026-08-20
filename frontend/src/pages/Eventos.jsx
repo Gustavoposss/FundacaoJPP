@@ -6,6 +6,7 @@ import { EventoForm } from '../components/EventoForm';
 import { Loader } from '../components/Loader';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { PageHeader } from '../components/PageHeader';
+import { formatarDataBR, paraInputDate } from '../utils/dateUtils';
 
 const emptyEvento = { nome: '', data_evento: '', local: '', descricao: '' };
 
@@ -37,11 +38,15 @@ export const Eventos = () => {
     event.preventDefault();
     setSaving(true);
     try {
+      const payload = {
+        ...current,
+        data_evento: paraInputDate(current.data_evento),
+      };
       if (current.id) {
-        await api.put(`/eventos/${current.id}`, current);
+        await api.put(`/eventos/${current.id}`, payload);
         toast.success('Evento atualizado com sucesso.');
       } else {
-        await api.post('/eventos', current);
+        await api.post('/eventos', payload);
         toast.success('Evento criado com sucesso.');
       }
       setShowModal(false);
@@ -118,7 +123,7 @@ export const Eventos = () => {
                   <tr key={evento.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-900">{evento.nome}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      {new Date(evento.data_evento).toLocaleDateString()}
+                      {formatarDataBR(evento.data_evento)}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">{evento.local}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{evento.descricao || '-'}</td>
@@ -127,7 +132,10 @@ export const Eventos = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            setCurrent(evento);
+                            setCurrent({
+                              ...evento,
+                              data_evento: paraInputDate(evento.data_evento),
+                            });
                             setShowModal(true);
                           }}
                           className="p-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"

@@ -256,3 +256,88 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
   return rows;
 };
 
+/**
+ * Idosos com mais faltas (menos presenças) no período.
+ */
+export const buscarFaltas = async ({ inicio, fim, nome, status, ordenar = 'faltas_desc' }) => {
+  let hasStatusColumn = false;
+  try {
+    const checkQuery = `
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = 'idosos' AND column_name = 'status'
+    `;
+    const { rows } = await db.query(checkQuery);
+    hasStatusColumn = rows.length > 0;
+  } catch (error) {
+    console.error('Erro ao verificar coluna status:', error);
+    hasStatusColumn = false;
+  }
+
+  let query = `
+    SELECT
+      i.id,
+      i.nome_completo,
+      i.cpf,
+      i.telefone,
+      ${hasStatusColumn ? "CASE WHEN i.status = 'espera' THEN 'fixo' ELSE i.status END AS status," : "'fixo' as status,"}
+      COUNT(p.id) FILTER (WHERE p.presente = false) AS total_faltas,
+      COUNT(p.id) FILTER (WHERE p.presente = true) AS total_presencas,
+      COUNT(p.id) AS total_registros
+    FROM idosos i
+    INNER JOIN presencas p ON p.id_idoso = i.id
+    INNER JOIN eventos e ON e.id = p.id_evento
+    WHERE 1=1
+  `;
+  const params = [];
+  let paramIndex = 1;
+
+  if (inicio) {
+    query += ` AND e.data_evento >= $${paramIndex}`;
+    params.push(inicio);
+    paramIndex++;
+  }
+
+  if (fim) {
+    query += ` AND e.data_evento <= $${paramIndex}`;
+    params.push(fim);
+    paramIndex++;
+  }
+
+  if (nome) {
+    query += ` AND LOWER(i.nome_completo) LIKE $${paramIndex}`;
+    params.push(`%${nome.toLowerCase()}%`);
+    paramIndex++;
+  }
+
+  if (status && hasStatusColumn) {
+    const normalizedStatus = status === 'espera' ? 'fixo' : status;
+
+    if (normalizedStatus === 'fixo') {
+      query += " AND i.status IN ('fixo', 'espera')";
+    } else {
+      query += ` AND i.status = $${paramIndex}`;
+      params.push(normalizedStatus);
+      paramIndex++;
+    }
+  }
+
+  query += ' GROUP BY i.id';
+
+  const orderBy = {
+    faltas_desc: 'total_faltas DESC, total_presencas ASC, i.nome_completo ASC',
+    faltas_asc: 'total_faltas ASC, i.nome_completo ASC',
+    presencas_desc: 'total_presencas DESC, i.nome_completo ASC',
+    presencas_asc: 'total_presencas ASC, i.nome_completo ASC',
+    frequencia_asc: '(COUNT(p.id) FILTER (WHERE p.presente = true)::float / NULLIF(COUNT(p.id), 0)) ASC, total_faltas DESC',
+    frequencia_desc: '(COUNT(p.id) FILTER (WHERE p.presente = true)::float / NULLIF(COUNT(p.id), 0)) DESC',
+    nome_asc: 'i.nome_completo ASC',
+    nome_desc: 'i.nome_completo DESC',
+  };
+
+  query += ` ORDER BY ${orderBy[ordenar] || orderBy.faltas_desc}`;
+
+  const { rows } = await db.query(query, params);
+  return rows;
+};
+

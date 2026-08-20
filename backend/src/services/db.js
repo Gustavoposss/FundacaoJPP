@@ -3,7 +3,10 @@ import pkg from 'pg';
 
 dotenv.config();
 
-const { Pool } = pkg;
+const { Pool, types } = pkg;
+
+// DATE (OID 1082) como 'YYYY-MM-DD', sem virar Date em UTC à meia-noite.
+types.setTypeParser(1082, (val) => val);
 
 // Configuração SSL para Supabase
 // O Supabase requer SSL, mas podemos usar rejectUnauthorized: false em desenvolvimento

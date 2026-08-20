@@ -1,4 +1,5 @@
 import PDFDocument from 'pdfkit';
+import { formatarDataBR } from './dateUtils.js';
 
 /**
  * Gera PDF formatado para relatórios
@@ -232,6 +233,32 @@ const getTableConfig = (tipo, pageWidth) => {
         ],
       };
 
+    case 'faltas':
+      return {
+        columns: [
+          { label: 'Nome', width: pageWidth * 0.28, align: 'left' },
+          { label: 'Status', width: pageWidth * 0.16, align: 'left' },
+          { label: 'Faltas', width: pageWidth * 0.12, align: 'center' },
+          { label: 'Presenças', width: pageWidth * 0.14, align: 'center' },
+          { label: 'Frequência', width: pageWidth * 0.14, align: 'center' },
+          { label: 'Telefone', width: pageWidth * 0.16, align: 'left' },
+        ],
+        getRowData: (r) => {
+          const faltas = Number(r.total_faltas) || 0;
+          const presencas = Number(r.total_presencas) || 0;
+          const total = faltas + presencas;
+          const frequencia = total ? Math.round((presencas / total) * 100) : 0;
+          return [
+            r.nome_completo || r.nome || '-',
+            r.status === 'inadimplente' ? 'Inadimplente' : 'Fixo',
+            String(faltas),
+            String(presencas),
+            `${frequencia}%`,
+            r.telefone || '-',
+          ];
+        },
+      };
+
     default:
       return {
         columns: [{ label: 'Dados', width: pageWidth, align: 'left' }],
@@ -248,6 +275,7 @@ const getTipoLabel = (tipo) => {
     presencas: 'Presenças',
     eventos: 'Eventos',
     idosos: 'Idosos',
+    faltas: 'Idosos que mais faltam',
   };
   return labels[tipo] || tipo;
 };
@@ -255,15 +283,7 @@ const getTipoLabel = (tipo) => {
 /**
  * Formata data para exibição
  */
-const formatDate = (dateString) => {
-  if (!dateString) return '-';
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR');
-  } catch (error) {
-    return dateString;
-  }
-};
+const formatDate = (dateString) => formatarDataBR(dateString);
 
 /**
  * Remove formatação do CPF, retornando apenas números

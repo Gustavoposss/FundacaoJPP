@@ -48,3 +48,13 @@ export const formatarDataBR = (dataEvento) => {
   const mes = String(partes.mes).padStart(2, '0');
   return `${dia}/${mes}/${partes.ano}`;
 };
+
+/**
+ * Retorna YYYY-MM-DD para inputs type="date", sem conversão de fuso.
+ */
+export const paraInputDate = (dataEvento) => {
+  const partes = extrairPartesData(dataEvento);
+  if (!partes) return '';
+
+  return `${partes.ano}-${String(partes.mes).padStart(2, '0')}-${String(partes.dia).padStart(2, '0')}`;
+};

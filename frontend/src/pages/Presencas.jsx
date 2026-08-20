@@ -6,6 +6,7 @@ import { Loader } from '../components/Loader';
 import { PresencaTable } from '../components/PresencaTable';
 import { PageHeader } from '../components/PageHeader';
 import { useDebounce } from '../hooks/useDebounce';
+import { formatarDataBR } from '../utils/dateUtils';
 export const Presencas = () => {
   const [eventos, setEventos] = useState([]);
   const [selectedEvento, setSelectedEvento] = useState('');
@@ -141,7 +142,7 @@ export const Presencas = () => {
             <option value="">Selecione um evento</option>
             {eventos.map((evento) => (
               <option key={evento.id} value={evento.id}>
-                {evento.nome} - {new Date(evento.data_evento).toLocaleDateString()}
+                {evento.nome} - {formatarDataBR(evento.data_evento)}
               </option>
             ))}
           </select>

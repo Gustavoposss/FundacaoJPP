@@ -3,12 +3,22 @@ import { toast } from 'react-toastify';
 import { Download, Filter } from 'react-bootstrap-icons';
 import { api } from '../services/api';
 import { PageHeader } from '../components/PageHeader';
+import { formatarDataBR } from '../utils/dateUtils';
 
 const tipos = [
   { value: 'presencas', label: 'Presenças' },
   { value: 'eventos', label: 'Eventos' },
   { value: 'idosos', label: 'Idosos' },
+  { value: 'faltas', label: 'Idosos que mais faltam' },
 ];
+
+const ordenacaoPadrao = (tipoRelatorio) => {
+  if (tipoRelatorio === 'idosos') return 'nome_asc';
+  if (tipoRelatorio === 'faltas') return 'faltas_desc';
+  return 'data_desc';
+};
+
+const getStatusLabel = (status) => (status === 'inadimplente' ? 'Inadimplentes' : 'Fixos');
 
 const ordenacoes = {
   presencas: [
@@ -34,6 +44,14 @@ const ordenacoes = {
     { value: 'cadastro_asc', label: 'Cadastro (mais antiga)' },
     { value: 'presencas_desc', label: 'Mais presenças' },
     { value: 'presencas_asc', label: 'Menos presenças' },
+  ],
+  faltas: [
+    { value: 'faltas_desc', label: 'Mais faltas' },
+    { value: 'faltas_asc', label: 'Menos faltas' },
+    { value: 'frequencia_asc', label: 'Menor frequência' },
+    { value: 'frequencia_desc', label: 'Maior frequência' },
+    { value: 'nome_asc', label: 'Nome (A-Z)' },
+    { value: 'nome_desc', label: 'Nome (Z-A)' },
   ],
 };
 
@@ -79,7 +97,7 @@ export const Relatorios = () => {
   // Resetar filtros quando mudar o tipo
   useEffect(() => {
     setFiltros({});
-    setOrdenar(tipo === 'idosos' ? 'nome_asc' : 'data_desc');
+    setOrdenar(ordenacaoPadrao(tipo));
   }, [tipo]);
 
   const handleGerar = async (event) => {
@@ -151,7 +169,7 @@ export const Relatorios = () => {
   const limparFiltros = () => {
     setFiltros({});
     setPeriodo({ inicio: '', fim: '' });
-    setOrdenar(tipo === 'idosos' ? 'nome_asc' : 'data_desc');
+    setOrdenar(ordenacaoPadrao(tipo));
   };
 
   return (
@@ -294,6 +312,33 @@ export const Relatorios = () => {
                 </>
               )}
 
+              {tipo === 'faltas' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+                      placeholder="Buscar por nome..."
+                      value={filtros.nome || ''}
+                      onChange={(e) => handleFiltroChange('nome', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+                      value={filtros.status || ''}
+                      onChange={(e) => handleFiltroChange('status', e.target.value)}
+                    >
+                      <option value="">Todos</option>
+                      <option value="fixo">Fixos</option>
+                      <option value="inadimplente">Inadimplentes</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
               {tipo === 'idosos' && (
                 <>
                   <div>
@@ -412,25 +457,51 @@ export const Relatorios = () => {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Título</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Descrição</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Data</th>
+                {tipo === 'faltas' ? (
+                  <>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Faltas</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Presenças</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Frequência</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Telefone</th>
+                  </>
+                ) : (
+                  <>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Título</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Descrição</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Data</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody>
               {dados.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={tipo === 'faltas' ? 6 : 3} className="px-4 py-8 text-center text-gray-500">
                     Nenhum dado encontrado para os filtros selecionados.
                   </td>
                 </tr>
+              ) : tipo === 'faltas' ? (
+                dados.map((item) => (
+                  <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 text-sm text-gray-900">{item.titulo}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{getStatusLabel(item.status)}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-fjpp-red">{item.total_faltas}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{item.total_presencas}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{item.frequencia}%</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{item.telefone || '-'}</td>
+                  </tr>
+                ))
               ) : (
                 dados.map((item) => (
                   <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-900">{item.titulo}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{item.descricao}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      {new Date(item.data).toLocaleDateString('pt-BR')}
+                      {tipo === 'idosos'
+                        ? (item.data ? new Date(item.data).toLocaleDateString('pt-BR') : '-')
+                        : formatarDataBR(item.data)}
                     </td>
                   </tr>
                 ))
