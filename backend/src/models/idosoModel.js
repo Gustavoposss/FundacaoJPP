@@ -1,16 +1,49 @@
 import db from '../services/db.js';
 
 const CAMPOS_SELECT = `
-  id, nome_completo, data_nascimento, sexo, telefone, endereco, numero, bairro, 
+  id, numero_sorteio, nome_completo, data_nascimento, sexo, telefone, endereco, numero, bairro, 
   cidade, cep, rg, naturalidade, orgao_expedidor, cpf, titulo_eleitoral, zona_eleitoral, 
   secao_eleitoral, municipio_uf, data_inscricao, data_cadastro,
   CASE WHEN status = 'espera' THEN 'fixo' ELSE status END AS status
 `;
 
 const CAMPOS_SELECT_LISTA = `
-  id, nome_completo, data_nascimento, sexo, telefone, cpf, data_cadastro,
+  id, numero_sorteio, nome_completo, data_nascimento, sexo, telefone, cpf, data_cadastro,
   CASE WHEN status = 'espera' THEN 'fixo' ELSE status END AS status
 `;
+
+/**
+ * Garante a coluna e numera os idosos em ordem alfabética, começando em 1.
+ * O id interno do banco não muda (ele é usado em presenças e documentos).
+ */
+export const garantirNumeroSorteio = async () => {
+  await db.query(`
+    ALTER TABLE idosos
+    ADD COLUMN IF NOT EXISTS numero_sorteio INTEGER
+  `);
+
+  await db.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_idosos_numero_sorteio
+    ON idosos(numero_sorteio)
+  `);
+
+  await renumerarIdosos();
+};
+
+export const renumerarIdosos = async () => {
+  await db.query('UPDATE idosos SET numero_sorteio = NULL');
+  await db.query(`
+    WITH ranked AS (
+      SELECT id,
+             ROW_NUMBER() OVER (ORDER BY LOWER(nome_completo) ASC, id ASC) AS rn
+      FROM idosos
+    )
+    UPDATE idosos i
+    SET numero_sorteio = ranked.rn
+    FROM ranked
+    WHERE i.id = ranked.id
+  `);
+};
 
 export const listarIdosos = async ({ search, status }) => {
   let query = `SELECT ${CAMPOS_SELECT_LISTA} FROM idosos`;
@@ -18,8 +51,19 @@ export const listarIdosos = async ({ search, status }) => {
   const conditions = [];
 
   if (search) {
-    conditions.push(`(LOWER(nome_completo) LIKE $${params.length + 1} OR cpf LIKE $${params.length + 1})`);
-    params.push(`%${search.toLowerCase()}%`);
+    const searchTerm = search.toLowerCase();
+    const numeroBusca = searchTerm.replace(/\D/g, '');
+    if (numeroBusca && numeroBusca === searchTerm.trim()) {
+      conditions.push(`(
+        LOWER(nome_completo) LIKE $${params.length + 1}
+        OR cpf LIKE $${params.length + 1}
+        OR CAST(numero_sorteio AS TEXT) = $${params.length + 2}
+      )`);
+      params.push(`%${searchTerm}%`, numeroBusca);
+    } else {
+      conditions.push(`(LOWER(nome_completo) LIKE $${params.length + 1} OR cpf LIKE $${params.length + 1})`);
+      params.push(`%${searchTerm}%`);
+    }
   }
 
   if (status) {
@@ -103,7 +147,8 @@ export const criarIdoso = async (dados) => {
     'fixo',
   ]);
 
-  return rows[0];
+  await renumerarIdosos();
+  return buscarIdosoPorId(rows[0].id);
 };
 
 export const atualizarIdoso = async (id, dados) => {
@@ -179,11 +224,19 @@ export const atualizarIdoso = async (id, dados) => {
     id,
   ]);
 
-  return rows[0];
+  if (!rows[0]) {
+    return rows[0];
+  }
+
+  await renumerarIdosos();
+  return buscarIdosoPorId(id);
 };
 
 export const deletarIdoso = async (id) => {
   const query = 'DELETE FROM idosos WHERE id = $1';
   const resultado = await db.query(query, [id]);
+  if (resultado.rowCount > 0) {
+    await renumerarIdosos();
+  }
   return resultado.rowCount > 0;
 };

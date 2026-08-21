@@ -36,6 +36,7 @@ export const listarIdososComStatus = async (eventoId) => {
     SELECT i.id,
            i.nome_completo,
            i.cpf,
+           i.numero_sorteio,
            ${hasStatusColumn ? 'i.status,' : "'fixo' as status,"}
            COALESCE(p.presente, false) AS presente,
            p.id AS presenca_id

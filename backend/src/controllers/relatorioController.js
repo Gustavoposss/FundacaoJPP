@@ -32,6 +32,7 @@ const mapearFaltas = (registros) =>
       titulo: r.nome_completo,
       descricao: `Faltas: ${total_faltas} | Presenças: ${total_presencas} | Frequência: ${frequencia}%`,
       nome: r.nome_completo,
+      numero_sorteio: r.numero_sorteio,
       telefone: r.telefone,
       status: r.status,
       cpf: r.cpf,
@@ -112,9 +113,10 @@ export const gerarRelatorio = async (req, res) => {
         registros = registros.map((r) => ({
           id: r.id,
           titulo: r.nome_completo,
-          descricao: `Idade: ${r.idade} anos | Sexo: ${r.sexo} | Status: ${getStatusLabel(r.status)} | Telefone: ${r.telefone || 'N/A'}`,
+          descricao: `Nº ${r.numero_sorteio || '-'} | Idade: ${r.idade} anos | Sexo: ${r.sexo} | Status: ${getStatusLabel(r.status)} | Telefone: ${r.telefone || 'N/A'}`,
           data: r.data_cadastro,
           nome: r.nome_completo,
+          numero_sorteio: r.numero_sorteio,
           idade: r.idade,
           sexo: r.sexo,
           status: r.status,
@@ -215,8 +217,9 @@ export const exportarRelatorio = async (req, res) => {
           status: filtros.status,
           ordenar: filtros.ordenar,
         });
-        headers = ['Nome', 'Idade', 'Sexo', 'Status', 'CPF', 'Telefone', 'Total Presenças'];
+        headers = ['Nº', 'Nome', 'Idade', 'Sexo', 'Status', 'CPF', 'Telefone', 'Total Presenças'];
         rows = registros.map((r) => [
+          r.numero_sorteio || '-',
           r.nome_completo,
           r.idade,
           r.sexo,
@@ -235,11 +238,12 @@ export const exportarRelatorio = async (req, res) => {
           status: filtros.status,
           ordenar: filtros.ordenar,
         });
-        headers = ['Nome', 'Status', 'Faltas', 'Presenças', 'Frequência (%)', 'Telefone', 'CPF'];
+        headers = ['Nº', 'Nome', 'Status', 'Faltas', 'Presenças', 'Frequência (%)', 'Telefone', 'CPF'];
         rows = registros.map((r) => {
           const total_faltas = Number(r.total_faltas) || 0;
           const total_presencas = Number(r.total_presencas) || 0;
           return [
+            r.numero_sorteio || '-',
             r.nome_completo,
             getStatusLabel(r.status),
             total_faltas,

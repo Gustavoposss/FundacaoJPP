@@ -7,6 +7,7 @@ export const PresencaTable = ({ idosos, togglePresenca, onSave, saving }) => (
       <table className="w-full border-collapse">
         <thead>
           <tr className="bg-gray-50 border-b border-gray-200">
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nº</th>
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
             <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">CPF</th>
             <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Presente</th>
@@ -15,13 +16,14 @@ export const PresencaTable = ({ idosos, togglePresenca, onSave, saving }) => (
         <tbody>
           {idosos.length === 0 ? (
             <tr>
-              <td colSpan={3} className="px-4 py-8 text-center text-gray-500">
+              <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
                 Nenhum idoso encontrado.
               </td>
             </tr>
           ) : (
             idosos.map((idoso) => (
               <tr key={idoso.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3 text-sm font-semibold text-fjpp-blue">{idoso.numero_sorteio ?? '-'}</td>
                 <td className="px-4 py-3 text-sm text-gray-900">{idoso.nome_completo}</td>
                 <td className="px-4 py-3 text-sm text-gray-600">{idoso.cpf ? cleanCPF(idoso.cpf) : '-'}</td>
                 <td className="px-4 py-3 text-center">
@@ -62,6 +64,7 @@ PresencaTable.propTypes = {
   idosos: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
+      numero_sorteio: PropTypes.number,
       nome_completo: PropTypes.string.isRequired,
       cpf: PropTypes.string,
       presente: PropTypes.bool,

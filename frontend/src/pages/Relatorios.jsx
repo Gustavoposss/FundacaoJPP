@@ -459,6 +459,7 @@ export const Relatorios = () => {
               <tr className="bg-gray-50 border-b border-gray-200">
                 {tipo === 'faltas' ? (
                   <>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nº</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Faltas</th>
@@ -478,13 +479,14 @@ export const Relatorios = () => {
             <tbody>
               {dados.length === 0 ? (
                 <tr>
-                  <td colSpan={tipo === 'faltas' ? 6 : 3} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={tipo === 'faltas' ? 7 : 3} className="px-4 py-8 text-center text-gray-500">
                     Nenhum dado encontrado para os filtros selecionados.
                   </td>
                 </tr>
               ) : tipo === 'faltas' ? (
                 dados.map((item) => (
                   <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 text-sm font-semibold text-fjpp-blue">{item.numero_sorteio ?? '-'}</td>
                     <td className="px-4 py-3 text-sm text-gray-900">{item.titulo}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{getStatusLabel(item.status)}</td>
                     <td className="px-4 py-3 text-sm font-medium text-fjpp-red">{item.total_faltas}</td>

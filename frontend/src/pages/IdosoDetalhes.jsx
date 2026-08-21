@@ -91,6 +91,7 @@ export const IdosoDetalhes = () => {
   }
 
   const personalInfo = [
+    { label: 'Número', value: idoso.numero_sorteio ?? '-' },
     { label: 'Nome Completo', value: idoso.nome_completo },
     { label: 'Data de Nascimento', value: idoso.data_nascimento ? idoso.data_nascimento.split('T')[0].split('-').reverse().join('/') : '-' },
     { label: 'Sexo', value: idoso.sexo },
@@ -116,7 +117,7 @@ export const IdosoDetalhes = () => {
     <div className="p-6">
       <PageHeader
         title={idoso.nome_completo}
-        subtitle="Detalhes completos do idoso"
+        subtitle={`Número ${idoso.numero_sorteio ?? '-'} — detalhes completos do idoso`}
         showBack
         breadcrumbs={[
           { label: 'Dashboard', to: '/dashboard' },

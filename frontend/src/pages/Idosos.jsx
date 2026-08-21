@@ -57,11 +57,15 @@ export const Idosos = () => {
     let filtered = [...idosos];
 
     // Aplica filtro de busca (nome ou CPF)
-    if (normalizedSearch && normalizedSearch.length >= 2) {
+    const digitsOnly = normalizedSearch.replace(/\D/g, '');
+    const buscaNumero = Boolean(digitsOnly && digitsOnly === normalizedSearch);
+
+    if (normalizedSearch && (normalizedSearch.length >= 2 || buscaNumero)) {
       filtered = filtered.filter((idoso) => {
         const nomeMatch = idoso.nome_completo?.toLowerCase().includes(normalizedSearch);
         const cpfMatch = idoso.cpf?.replace(/\D/g, '').includes(normalizedSearch);
-        return nomeMatch || cpfMatch;
+        const numeroMatch = buscaNumero && String(idoso.numero_sorteio || '') === digitsOnly;
+        return nomeMatch || cpfMatch || numeroMatch;
       });
     }
 
@@ -77,8 +81,10 @@ export const Idosos = () => {
     try {
       await api.delete(`/idosos/${selected.id}`);
       toast.success('Idoso excluído com sucesso.');
-      setIdosos((prev) => prev.filter((idoso) => idoso.id !== selected.id));
-      setFilteredIdosos((prev) => prev.filter((idoso) => idoso.id !== selected.id));
+      const { data } = await api.get('/idosos');
+      const fetchedIdosos = data.data?.idosos || [];
+      setIdosos(fetchedIdosos);
+      setFilteredIdosos(fetchedIdosos);
     } catch (error) {
       toast.error('Erro ao excluir idoso.');
     } finally {
@@ -118,7 +124,7 @@ export const Idosos = () => {
             </div>
             <input
               type="text"
-              placeholder="Buscar por nome ou CPF (mínimo 2 caracteres)"
+              placeholder="Buscar por nome, CPF ou número"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
@@ -144,6 +150,7 @@ export const Idosos = () => {
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nº</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Sexo</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
@@ -155,13 +162,14 @@ export const Idosos = () => {
             <tbody>
               {filteredIdosos.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                     Nenhum idoso encontrado.
                   </td>
                 </tr>
               ) : (
                 filteredIdosos.map((idoso) => (
                   <tr key={idoso.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 text-sm font-semibold text-fjpp-blue">{idoso.numero_sorteio ?? '-'}</td>
                     <td className="px-4 py-3 text-sm text-gray-900">{idoso.nome_completo}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{idoso.sexo}</td>
                     <td className="px-4 py-3">

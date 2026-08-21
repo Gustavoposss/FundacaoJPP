@@ -166,6 +166,7 @@ export const buscarIdosos = async ({ inicio, fim, nome, cpf, sexo, idade_min, id
   let query = `
     SELECT 
       i.id,
+      i.numero_sorteio,
       i.nome_completo,
       ${idadeExpression} AS idade,
       i.sexo,
@@ -277,6 +278,7 @@ export const buscarFaltas = async ({ inicio, fim, nome, status, ordenar = 'falta
   let query = `
     SELECT
       i.id,
+      i.numero_sorteio,
       i.nome_completo,
       i.cpf,
       i.telefone,

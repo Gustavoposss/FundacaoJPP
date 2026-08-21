@@ -77,7 +77,8 @@ export const Presencas = () => {
       filtered = filtered.filter((idoso) => {
         const nomeMatch = idoso.nome_completo?.toLowerCase().includes(normalizedSearch);
         const cpfMatch = idoso.cpf?.replace(/\D/g, '').includes(normalizedSearch);
-        return nomeMatch || cpfMatch;
+        const numeroMatch = String(idoso.numero_sorteio || '') === normalizedSearch.replace(/\D/g, '') && normalizedSearch.replace(/\D/g, '') !== '';
+        return nomeMatch || cpfMatch || numeroMatch;
       });
     }
 

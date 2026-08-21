@@ -216,14 +216,16 @@ const getTableConfig = (tipo, pageWidth) => {
     case 'idosos':
       return {
         columns: [
-          { label: 'Nome', width: pageWidth * 0.3, align: 'left' },
-          { label: 'Idade', width: pageWidth * 0.1, align: 'center' },
+          { label: 'Nº', width: pageWidth * 0.08, align: 'center' },
+          { label: 'Nome', width: pageWidth * 0.26, align: 'left' },
+          { label: 'Idade', width: pageWidth * 0.08, align: 'center' },
           { label: 'Sexo', width: pageWidth * 0.1, align: 'center' },
-          { label: 'CPF', width: pageWidth * 0.2, align: 'left' },
+          { label: 'CPF', width: pageWidth * 0.18, align: 'left' },
           { label: 'Telefone', width: pageWidth * 0.15, align: 'left' },
           { label: 'Presenças', width: pageWidth * 0.15, align: 'center' },
         ],
         getRowData: (r) => [
+          String(r.numero_sorteio || '-'),
           r.nome_completo || '-',
           String(r.idade || '-'),
           r.sexo || '-',
@@ -236,12 +238,13 @@ const getTableConfig = (tipo, pageWidth) => {
     case 'faltas':
       return {
         columns: [
-          { label: 'Nome', width: pageWidth * 0.28, align: 'left' },
-          { label: 'Status', width: pageWidth * 0.16, align: 'left' },
-          { label: 'Faltas', width: pageWidth * 0.12, align: 'center' },
-          { label: 'Presenças', width: pageWidth * 0.14, align: 'center' },
+          { label: 'Nº', width: pageWidth * 0.08, align: 'center' },
+          { label: 'Nome', width: pageWidth * 0.24, align: 'left' },
+          { label: 'Status', width: pageWidth * 0.14, align: 'left' },
+          { label: 'Faltas', width: pageWidth * 0.1, align: 'center' },
+          { label: 'Presenças', width: pageWidth * 0.12, align: 'center' },
           { label: 'Frequência', width: pageWidth * 0.14, align: 'center' },
-          { label: 'Telefone', width: pageWidth * 0.16, align: 'left' },
+          { label: 'Telefone', width: pageWidth * 0.18, align: 'left' },
         ],
         getRowData: (r) => {
           const faltas = Number(r.total_faltas) || 0;
@@ -249,6 +252,7 @@ const getTableConfig = (tipo, pageWidth) => {
           const total = faltas + presencas;
           const frequencia = total ? Math.round((presencas / total) * 100) : 0;
           return [
+            String(r.numero_sorteio || '-'),
             r.nome_completo || r.nome || '-',
             r.status === 'inadimplente' ? 'Inadimplente' : 'Fixo',
             String(faltas),
