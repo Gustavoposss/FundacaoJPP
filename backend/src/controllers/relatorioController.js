@@ -1,4 +1,4 @@
-import { buscarPresencas, buscarEventos, buscarIdosos, buscarFaltas } from '../models/relatorioModel.js';
+import { buscarPresencas, buscarEventos, buscarIdosos, buscarFaltas, buscarTitulosEleitorais } from '../models/relatorioModel.js';
 import { successResponse, errorResponse } from '../utils/responseHelper.js';
 import { generatePDF } from '../utils/pdfGenerator.js';
 import { formatarDataBR } from '../utils/dateUtils.js';
@@ -11,7 +11,17 @@ const cleanCPF = (cpf) => {
   return String(cpf).replace(/\D/g, '');
 };
 
-const TIPOS_RELATORIO = ['presencas', 'eventos', 'idosos', 'faltas'];
+const TIPOS_RELATORIO = ['presencas', 'eventos', 'idosos', 'faltas', 'titulos'];
+
+const mapearTitulos = (registros) =>
+  registros.map((r) => ({
+    id: r.id,
+    orgao_expedidor: r.orgao_expedidor || '-',
+    titulo_eleitoral: r.titulo_eleitoral || '-',
+    zona_eleitoral: r.zona_eleitoral || '-',
+    secao_eleitoral: r.secao_eleitoral || '-',
+    municipio_uf: r.municipio_uf || '-',
+  }));
 
 const getStatusLabel = (status) => (status === 'inadimplente' ? 'Inadimplentes' : 'Fixos');
 
@@ -138,6 +148,18 @@ export const gerarRelatorio = async (req, res) => {
           })
         );
         break;
+
+      case 'titulos':
+        registros = mapearTitulos(
+          await buscarTitulosEleitorais({
+            inicio,
+            fim,
+            status: filtros.status,
+            municipio: filtros.municipio,
+            ordenar: filtros.ordenar,
+          })
+        );
+        break;
     }
 
     return successResponse(res, { registros }, 'Relatório gerado com sucesso');
@@ -253,6 +275,24 @@ export const exportarRelatorio = async (req, res) => {
             cleanCPF(r.cpf),
           ];
         });
+        break;
+
+      case 'titulos':
+        registros = await buscarTitulosEleitorais({
+          inicio,
+          fim,
+          status: filtros.status,
+          municipio: filtros.municipio,
+          ordenar: filtros.ordenar,
+        });
+        headers = ['Órgão Expedidor', 'Título Eleitoral', 'Zona', 'Seção', 'Município/UF'];
+        rows = registros.map((r) => [
+          r.orgao_expedidor || '-',
+          r.titulo_eleitoral || '-',
+          r.zona_eleitoral || '-',
+          r.secao_eleitoral || '-',
+          r.municipio_uf || '-',
+        ]);
         break;
     }
 

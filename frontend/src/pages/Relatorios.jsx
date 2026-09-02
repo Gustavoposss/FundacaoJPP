@@ -10,11 +10,13 @@ const tipos = [
   { value: 'eventos', label: 'Eventos' },
   { value: 'idosos', label: 'Idosos' },
   { value: 'faltas', label: 'Idosos que mais faltam' },
+  { value: 'titulos', label: 'Títulos eleitorais' },
 ];
 
 const ordenacaoPadrao = (tipoRelatorio) => {
   if (tipoRelatorio === 'idosos') return 'nome_asc';
   if (tipoRelatorio === 'faltas') return 'faltas_desc';
+  if (tipoRelatorio === 'titulos') return 'municipio_asc';
   return 'data_desc';
 };
 
@@ -52,6 +54,14 @@ const ordenacoes = {
     { value: 'frequencia_desc', label: 'Maior frequência' },
     { value: 'nome_asc', label: 'Nome (A-Z)' },
     { value: 'nome_desc', label: 'Nome (Z-A)' },
+  ],
+  titulos: [
+    { value: 'municipio_asc', label: 'Município (A-Z)' },
+    { value: 'municipio_desc', label: 'Município (Z-A)' },
+    { value: 'zona_asc', label: 'Zona (menor)' },
+    { value: 'zona_desc', label: 'Zona (maior)' },
+    { value: 'titulo_asc', label: 'Título (crescente)' },
+    { value: 'titulo_desc', label: 'Título (decrescente)' },
   ],
 };
 
@@ -312,6 +322,33 @@ export const Relatorios = () => {
                 </>
               )}
 
+              {tipo === 'titulos' && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Município/UF</label>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+                      placeholder="Ex: Fortaleza/CE"
+                      value={filtros.municipio || ''}
+                      onChange={(e) => handleFiltroChange('municipio', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-fjpp-blue focus:border-fjpp-blue outline-none transition-colors"
+                      value={filtros.status || ''}
+                      onChange={(e) => handleFiltroChange('status', e.target.value)}
+                    >
+                      <option value="">Todos</option>
+                      <option value="fixo">Fixos</option>
+                      <option value="inadimplente">Inadimplentes</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
               {tipo === 'faltas' && (
                 <>
                   <div>
@@ -467,6 +504,14 @@ export const Relatorios = () => {
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Frequência</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Telefone</th>
                   </>
+                ) : tipo === 'titulos' ? (
+                  <>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Órgão Expedidor</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Título Eleitoral</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Zona</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Seção</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Município/UF</th>
+                  </>
                 ) : (
                   <>
                     <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Título</th>
@@ -479,7 +524,7 @@ export const Relatorios = () => {
             <tbody>
               {dados.length === 0 ? (
                 <tr>
-                  <td colSpan={tipo === 'faltas' ? 7 : 3} className="px-4 py-8 text-center text-gray-500">
+                  <td colSpan={tipo === 'faltas' ? 7 : tipo === 'titulos' ? 5 : 3} className="px-4 py-8 text-center text-gray-500">
                     Nenhum dado encontrado para os filtros selecionados.
                   </td>
                 </tr>
@@ -493,6 +538,16 @@ export const Relatorios = () => {
                     <td className="px-4 py-3 text-sm text-gray-600">{item.total_presencas}</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{item.frequencia}%</td>
                     <td className="px-4 py-3 text-sm text-gray-600">{item.telefone || '-'}</td>
+                  </tr>
+                ))
+              ) : tipo === 'titulos' ? (
+                dados.map((item) => (
+                  <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 text-sm text-gray-900">{item.orgao_expedidor}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900">{item.titulo_eleitoral}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{item.zona_eleitoral}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{item.secao_eleitoral}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{item.municipio_uf}</td>
                   </tr>
                 ))
               ) : (

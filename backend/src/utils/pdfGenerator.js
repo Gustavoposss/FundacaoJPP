@@ -263,6 +263,24 @@ const getTableConfig = (tipo, pageWidth) => {
         },
       };
 
+    case 'titulos':
+      return {
+        columns: [
+          { label: 'Órgão Expedidor', width: pageWidth * 0.18, align: 'left' },
+          { label: 'Título Eleitoral', width: pageWidth * 0.26, align: 'left' },
+          { label: 'Zona', width: pageWidth * 0.12, align: 'center' },
+          { label: 'Seção', width: pageWidth * 0.14, align: 'center' },
+          { label: 'Município/UF', width: pageWidth * 0.3, align: 'left' },
+        ],
+        getRowData: (r) => [
+          r.orgao_expedidor || '-',
+          r.titulo_eleitoral || '-',
+          r.zona_eleitoral || '-',
+          r.secao_eleitoral || '-',
+          r.municipio_uf || '-',
+        ],
+      };
+
     default:
       return {
         columns: [{ label: 'Dados', width: pageWidth, align: 'left' }],
@@ -280,6 +298,7 @@ const getTipoLabel = (tipo) => {
     eventos: 'Eventos',
     idosos: 'Idosos',
     faltas: 'Idosos que mais faltam',
+    titulos: 'Títulos eleitorais',
   };
   return labels[tipo] || tipo;
 };

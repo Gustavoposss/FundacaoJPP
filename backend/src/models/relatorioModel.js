@@ -343,3 +343,80 @@ export const buscarFaltas = async ({ inicio, fim, nome, status, ordenar = 'falta
   return rows;
 };
 
+/**
+ * Títulos eleitorais sem identificar o idoso (sem nome, CPF ou número).
+ */
+export const buscarTitulosEleitorais = async ({ inicio, fim, status, municipio, ordenar = 'municipio_asc' }) => {
+  let hasStatusColumn = false;
+  try {
+    const checkQuery = `
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_name = 'idosos' AND column_name = 'status'
+    `;
+    const { rows } = await db.query(checkQuery);
+    hasStatusColumn = rows.length > 0;
+  } catch (error) {
+    console.error('Erro ao verificar coluna status:', error);
+    hasStatusColumn = false;
+  }
+
+  let query = `
+    SELECT
+      i.id,
+      i.orgao_expedidor,
+      i.titulo_eleitoral,
+      i.zona_eleitoral,
+      i.secao_eleitoral,
+      i.municipio_uf
+    FROM idosos i
+    WHERE 1=1
+  `;
+  const params = [];
+  let paramIndex = 1;
+
+  if (inicio) {
+    query += ` AND i.data_cadastro >= $${paramIndex}`;
+    params.push(inicio);
+    paramIndex++;
+  }
+
+  if (fim) {
+    query += ` AND i.data_cadastro <= $${paramIndex}`;
+    params.push(fim);
+    paramIndex++;
+  }
+
+  if (municipio) {
+    query += ` AND LOWER(i.municipio_uf) LIKE $${paramIndex}`;
+    params.push(`%${municipio.toLowerCase()}%`);
+    paramIndex++;
+  }
+
+  if (status && hasStatusColumn) {
+    const normalizedStatus = status === 'espera' ? 'fixo' : status;
+
+    if (normalizedStatus === 'fixo') {
+      query += " AND i.status IN ('fixo', 'espera')";
+    } else {
+      query += ` AND i.status = $${paramIndex}`;
+      params.push(normalizedStatus);
+      paramIndex++;
+    }
+  }
+
+  const orderBy = {
+    municipio_asc: 'i.municipio_uf ASC, i.zona_eleitoral ASC, i.secao_eleitoral ASC',
+    municipio_desc: 'i.municipio_uf DESC, i.zona_eleitoral ASC, i.secao_eleitoral ASC',
+    zona_asc: 'i.zona_eleitoral ASC, i.secao_eleitoral ASC',
+    zona_desc: 'i.zona_eleitoral DESC, i.secao_eleitoral ASC',
+    titulo_asc: 'i.titulo_eleitoral ASC',
+    titulo_desc: 'i.titulo_eleitoral DESC',
+  };
+
+  query += ` ORDER BY ${orderBy[ordenar] || orderBy.municipio_asc}`;
+
+  const { rows } = await db.query(query, params);
+  return rows;
+};
+
